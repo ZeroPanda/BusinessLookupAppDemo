@@ -59,8 +59,8 @@ export default function SignupPage() {
                 </RadioGroup>
             </div>
 
-            <Button type="submit" className="w-full">
-              Create Account
+            <Button asChild className="w-full">
+              <Link href="/dashboard">Create Account</Link>
             </Button>
           </div>
           <div className="mt-4 text-center text-sm">
