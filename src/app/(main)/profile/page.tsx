@@ -5,6 +5,21 @@ import { Card, CardContent, CardHeader, CardTitle, CardDescription, CardFooter }
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { Star, MapPin, Globe, Edit, Share2, ThumbsUp, MessageCircle, BadgeCheck } from 'lucide-react';
 import { Badge } from '@/components/ui/badge';
+import { Dialog, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle, DialogTrigger, DialogClose } from '@/components/ui/dialog';
+import { Label } from '@/components/ui/label';
+import { Textarea } from '@/components/ui/textarea';
+
+const services = [
+    { title: 'Website Design', desc: 'Custom, responsive websites.', price: '$1,500+', rating: 4.9, reviewCount: 82 },
+    { title: 'Branding & Logo', desc: 'Memorable brand identities.', price: '$800+', rating: 5.0, reviewCount: 25 },
+    { title: 'Social Media Mgmt', desc: 'Engaging content & growth.', price: '$500/mo', rating: 4.8, reviewCount: 13 },
+];
+
+const reviews = [
+    {name: 'Local Cafe', avatar: 'https://placehold.co/40x40.png', dataAiHint: 'cafe logo', rating: 5, text: 'Creative Solutions completely revamped our online presence. The new website is beautiful and so much easier to navigate. Highly recommended!', service: 'Website Design'},
+    {name: 'Handy Andy', avatar: 'https://placehold.co/40x40.png', dataAiHint: 'person portrait', rating: 5, text: 'They designed a fantastic logo and business cards for my handyman service. The process was smooth and the result was professional.', service: 'Branding & Logo'},
+    {name: 'Downtown Books', avatar: 'https://placehold.co/40x40.png', dataAiHint: 'bookstore logo', rating: 4, text: 'Their social media management has really helped us connect with the community. We\'ve seen a definite increase in foot traffic.', service: 'Social Media Mgmt'},
+];
 
 export default function ProfilePage() {
   return (
@@ -34,7 +49,31 @@ export default function ProfilePage() {
                     <div className="flex space-x-2">
                         <Button variant="outline" size="icon"><Edit className="h-4 w-4" /></Button>
                         <Button variant="outline" size="icon"><Share2 className="h-4 w-4" /></Button>
-                        <Button>Request a Quote</Button>
+                        <Dialog>
+                            <DialogTrigger asChild>
+                                <Button>Request a Quote</Button>
+                            </DialogTrigger>
+                            <DialogContent className="sm:max-w-[425px]">
+                                <DialogHeader>
+                                <DialogTitle>Request a Quote from Creative Solutions</DialogTitle>
+                                <DialogDescription>
+                                    Describe your project below. They will receive your request and get back to you soon.
+                                </DialogDescription>
+                                </DialogHeader>
+                                <div className="grid gap-4 py-4">
+                                    <div className="grid w-full gap-1.5">
+                                        <Label htmlFor="message">Your message</Label>
+                                        <Textarea placeholder="Hi, I'm looking for a new website for my coffee shop..." id="message" rows={6}/>
+                                    </div>
+                                </div>
+                                <DialogFooter>
+                                    <DialogClose asChild>
+                                        <Button type="button" variant="secondary">Cancel</Button>
+                                    </DialogClose>
+                                    <Button type="submit">Send Request</Button>
+                                </DialogFooter>
+                            </DialogContent>
+                        </Dialog>
                     </div>
                 </div>
             </div>
@@ -75,19 +114,22 @@ export default function ProfilePage() {
         </TabsList>
         <TabsContent value="services" className="mt-6">
           <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
-            {[
-                { title: 'Website Design', desc: 'Custom, responsive websites.', price: '$1,500+' },
-                { title: 'Branding & Logo', desc: 'Memorable brand identities.', price: '$800+' },
-                { title: 'Social Media Mgmt', desc: 'Engaging content & growth.', price: '$500/mo' },
-            ].map(service => (
+            {services.map(service => (
                 <Card key={service.title}>
                     <CardHeader>
                         <CardTitle>{service.title}</CardTitle>
                         <CardDescription>{service.desc}</CardDescription>
                     </CardHeader>
-                    <CardContent>
+                    <CardContent className="space-y-4">
                         <p className="text-2xl font-bold">{service.price}</p>
+                         <div className="flex items-center gap-2 text-sm text-muted-foreground">
+                            <Star className="h-4 w-4 fill-yellow-500 text-yellow-500" />
+                            <span>{service.rating.toFixed(1)} ({service.reviewCount} reviews)</span>
+                        </div>
                     </CardContent>
+                    <CardFooter>
+                        <Button variant="secondary" className="w-full">Get a Quote</Button>
+                    </CardFooter>
                 </Card>
             ))}
           </div>
@@ -125,10 +167,7 @@ export default function ProfilePage() {
         </TabsContent>
         <TabsContent value="reviews" className="mt-6">
             <div className="space-y-6 max-w-2xl mx-auto">
-                {[
-                    {name: 'Local Cafe', avatar: 'https://placehold.co/40x40.png', dataAiHint: 'cafe logo', rating: 5, text: 'Creative Solutions completely revamped our online presence. The new website is beautiful and so much easier to navigate. Highly recommended!'},
-                    {name: 'Handy Andy', avatar: 'https://placehold.co/40x40.png', dataAiHint: 'person portrait', rating: 5, text: 'They designed a fantastic logo and business cards for my handyman service. The process was smooth and the result was professional.'},
-                ].map(review => (
+                {reviews.map(review => (
                     <Card key={review.name}>
                         <CardHeader className="flex flex-row items-center justify-between">
                             <div className="flex items-center space-x-3">
@@ -137,7 +176,14 @@ export default function ProfilePage() {
                             </div>
                             <div className="flex items-center gap-1">{Array(review.rating).fill(0).map((_, i) => <Star key={i} className="h-5 w-5 text-yellow-500 fill-yellow-500"/>)}</div>
                         </CardHeader>
-                        <CardContent><p>{review.text}</p></CardContent>
+                        <CardContent>
+                            {review.service && (
+                                <p className="text-sm text-muted-foreground font-medium mb-2">
+                                    Review for: <span className="text-foreground">{review.service}</span>
+                                </p>
+                            )}
+                            <p>{review.text}</p>
+                        </CardContent>
                     </Card>
                 ))}
             </div>
