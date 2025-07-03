@@ -33,7 +33,7 @@ export const ExploreMap = ({ businesses, selectedBusiness }: ExploreMapProps) =>
 
   return (
     <MapContainer
-      center={selectedBusiness?.coords || defaultPosition}
+      center={defaultPosition}
       zoom={defaultZoom}
       scrollWheelZoom={false}
       className="h-full w-full z-0"
