@@ -135,8 +135,8 @@ export default function ExplorePage() {
     const getInitials = (name: string) => name.split(' ').map(n => n[0]).join('');
 
   return (
-    <div className="grid grid-cols-1 lg:grid-cols-3 gap-8 lg:h-[calc(100vh_-_8rem)]">
-      <div className="lg:col-span-1 lg:flex lg:flex-col">
+    <div className="grid grid-cols-1 lg:grid-cols-3 gap-8 flex-1">
+      <div className="lg:col-span-1 lg:flex lg:flex-col min-h-[50vh] lg:min-h-0">
         <Card className="flex-1 flex flex-col">
           <CardHeader>
             <CardTitle>Explore Businesses</CardTitle>
