@@ -178,23 +178,34 @@ export default function ExplorePage() {
             data-ai-hint="map city"
           />
           {selectedBusiness && (
-            <div className="absolute bottom-6 left-1/2 -translate-x-1/2 w-[calc(100%-3rem)] max-w-sm">
-                 <Card className="shadow-2xl">
-                    <CardContent className="flex items-center gap-4 p-4">
-                        <Avatar className="h-16 w-16 border">
-                            <AvatarImage src={selectedBusiness.avatar} data-ai-hint={selectedBusiness.dataAiHint} />
-                            <AvatarFallback>{selectedBusiness.name.charAt(0)}</AvatarFallback>
-                        </Avatar>
-                        <div className="flex-1">
-                            <h3 className="font-bold">{selectedBusiness.name}</h3>
-                            <p className="text-sm text-muted-foreground">{selectedBusiness.description}</p>
-                             <div className="mt-2 flex items-center gap-2 text-sm text-muted-foreground">
-                                <Star className="h-4 w-4 fill-yellow-500 text-yellow-500" />
-                                <span>{selectedBusiness.rating} ({selectedBusiness.reviews} reviews)</span>
-                             </div>
-                        </div>
-                    </CardContent>
-                </Card>
+            <div className="absolute bottom-6 left-1/2 w-full max-w-md -translate-x-1/2 px-6">
+              <Card className="border-0 bg-background/80 shadow-2xl backdrop-blur-sm">
+                <CardContent className="flex items-center gap-4 p-4">
+                  <Avatar className="h-16 w-16 border-2 border-background">
+                    <AvatarImage
+                      src={selectedBusiness.avatar}
+                      data-ai-hint={selectedBusiness.dataAiHint}
+                    />
+                    <AvatarFallback>
+                      {selectedBusiness.name.charAt(0)}
+                    </AvatarFallback>
+                  </Avatar>
+                  <div className="flex-1">
+                    <h3 className="text-lg font-bold">{selectedBusiness.name}</h3>
+                    <p className="text-sm text-muted-foreground">
+                      {selectedBusiness.description}
+                    </p>
+                    <div className="mt-1 flex items-center gap-2 text-sm text-muted-foreground">
+                      <Star className="h-4 w-4 fill-yellow-500 text-yellow-500" />
+                      <span>
+                        {selectedBusiness.rating} ({selectedBusiness.reviews}{" "}
+                        reviews)
+                      </span>
+                    </div>
+                  </div>
+                  <Button>View Profile</Button>
+                </CardContent>
+              </Card>
             </div>
           )}
         </Card>
