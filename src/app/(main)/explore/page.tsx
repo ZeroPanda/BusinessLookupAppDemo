@@ -138,7 +138,7 @@ export default function ExplorePage() {
                     ))}
                 </div>
              </div>
-             <ScrollArea className="h-full px-6">
+             <ScrollArea className="flex-1 min-h-0 px-6">
                 <div className="space-y-4 pb-6">
                 {filteredBusinesses.map((biz) => (
                   <div 
