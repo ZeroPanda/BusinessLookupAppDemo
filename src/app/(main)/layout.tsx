@@ -23,6 +23,8 @@ import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { Input } from '@/components/ui/input';
 import { cn } from '@/lib/utils';
 import { ThemeToggle } from '@/components/theme-toggle';
+import { CookieBanner } from '@/components/cookie-banner';
+import React, { useState, useEffect } from 'react';
 
 export default function MainLayout({
   children,
@@ -30,6 +32,11 @@ export default function MainLayout({
   children: React.ReactNode;
 }) {
   const pathname = usePathname();
+  const [currentYear, setCurrentYear] = useState(new Date().getFullYear());
+
+  useEffect(() => {
+    setCurrentYear(new Date().getFullYear());
+  }, []);
 
   const isActive = (path: string) => {
     return path === '/dashboard' ? pathname === path : pathname.startsWith(path);
@@ -112,9 +119,26 @@ export default function MainLayout({
         </div>
       </header>
       
-      <main className="flex-1 p-4 md:p-6 lg:p-8 pb-24 md:pb-8">
+      <main className="flex-1 p-4 md:p-6 lg:p-8 pb-36 md:pb-8">
         {children}
       </main>
+
+      {/* Desktop Footer */}
+      <footer className="hidden md:block bg-background border-t">
+          <div className="container mx-auto py-6 px-4 md:px-6">
+              <div className="flex flex-col md:flex-row justify-between items-center gap-4">
+                  <div className="flex items-center gap-2">
+                    <Logo />
+                    <p className="text-sm text-muted-foreground">&copy; {currentYear} Neighborly. All rights reserved.</p>
+                  </div>
+                  <nav className="flex gap-4 sm:gap-6">
+                      <Link href="/contact" className="text-sm hover:underline underline-offset-4 text-muted-foreground">Contact</Link>
+                      <Link href="/privacy" className="text-sm hover:underline underline-offset-4 text-muted-foreground">Privacy Policy</Link>
+                      <Link href="/cookies" className="text-sm hover:underline underline-offset-4 text-muted-foreground">Cookie Policy</Link>
+                  </nav>
+              </div>
+          </div>
+      </footer>
 
       {/* Mobile Bottom Navigation */}
       <footer className="fixed bottom-0 left-0 right-0 z-30 border-t bg-background p-2 md:hidden">
@@ -136,6 +160,7 @@ export default function MainLayout({
             ))}
         </nav>
       </footer>
+      <CookieBanner />
     </div>
   );
 }

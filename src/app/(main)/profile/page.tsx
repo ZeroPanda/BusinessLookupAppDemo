@@ -1,3 +1,5 @@
+'use client';
+
 import Image from 'next/image';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { Button } from '@/components/ui/button';
@@ -8,6 +10,7 @@ import { Badge } from '@/components/ui/badge';
 import { Dialog, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle, DialogTrigger, DialogClose } from '@/components/ui/dialog';
 import { Label } from '@/components/ui/label';
 import { Textarea } from '@/components/ui/textarea';
+import { useToast } from '@/hooks/use-toast';
 
 const services = [
     { title: 'Website Design', desc: 'Custom, responsive websites.', price: '$1,500+', rating: 4.9, reviewCount: 82 },
@@ -43,6 +46,15 @@ const renderReviewText = (text: string) => {
 };
 
 export default function ProfilePage() {
+  const { toast } = useToast();
+
+  const handleSendRequest = () => {
+    toast({
+      title: "Quote Request Sent!",
+      description: "Your message has been sent to Creative Solutions. They will get back to you shortly.",
+    });
+  };
+
   return (
     <div className="space-y-8">
       <Card className="overflow-hidden">
@@ -91,7 +103,9 @@ export default function ProfilePage() {
                                     <DialogClose asChild>
                                         <Button type="button" variant="secondary">Cancel</Button>
                                     </DialogClose>
-                                    <Button type="submit">Send Request</Button>
+                                    <DialogClose asChild>
+                                      <Button type="submit" onClick={handleSendRequest}>Send Request</Button>
+                                    </DialogClose>
                                 </DialogFooter>
                             </DialogContent>
                         </Dialog>
@@ -149,7 +163,33 @@ export default function ProfilePage() {
                         </div>
                     </CardContent>
                     <CardFooter>
-                        <Button variant="secondary" className="w-full">Get a Quote</Button>
+                       <Dialog>
+                          <DialogTrigger asChild>
+                            <Button variant="secondary" className="w-full">Get a Quote</Button>
+                          </DialogTrigger>
+                          <DialogContent className="sm:max-w-[425px]">
+                            <DialogHeader>
+                              <DialogTitle>Request a Quote for {service.title}</DialogTitle>
+                              <DialogDescription>
+                                Describe your project below. Creative Solutions will receive your request and get back to you soon.
+                              </DialogDescription>
+                            </DialogHeader>
+                            <div className="grid gap-4 py-4">
+                              <div className="grid w-full gap-1.5">
+                                <Label htmlFor="message-service">Your message</Label>
+                                <Textarea placeholder={`Hi, I'm interested in the ${service.title} service...`} id="message-service" rows={6}/>
+                              </div>
+                            </div>
+                            <DialogFooter>
+                                <DialogClose asChild>
+                                    <Button type="button" variant="secondary">Cancel</Button>
+                                </DialogClose>
+                                <DialogClose asChild>
+                                  <Button type="submit" onClick={handleSendRequest}>Send Request</Button>
+                                </DialogClose>
+                            </DialogFooter>
+                          </DialogContent>
+                        </Dialog>
                     </CardFooter>
                 </Card>
             ))}
