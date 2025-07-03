@@ -9,6 +9,9 @@ import { Search, Star } from 'lucide-react';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { ScrollArea } from '@/components/ui/scroll-area';
 import { cn } from '@/lib/utils';
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
+import { Label } from '@/components/ui/label';
+import { Separator } from '@/components/ui/separator';
 
 const businesses = [
   {
@@ -86,7 +89,7 @@ const businesses = [
     name: 'Bella Napoli Pizzeria',
     category: 'Restaurants',
     description: 'Authentic Italian Pizza',
-    rating: 4.8,
+    rating: 2.8,
     reviews: 180,
     avatar: 'https://placehold.co/40x40.png',
     dataAiHint: 'pizza logo',
@@ -105,10 +108,15 @@ const categories = [
 export default function ExplorePage() {
     const [selectedBusiness, setSelectedBusiness] = useState(businesses[0]);
     const [activeCategory, setActiveCategory] = useState('All');
+    const [searchTerm, setSearchTerm] = useState('');
+    const [ratingFilter, setRatingFilter] = useState<number | null>(null);
 
-    const filteredBusinesses = businesses.filter(biz => 
-        activeCategory === 'All' || biz.category === activeCategory
-    );
+    const filteredBusinesses = businesses.filter(biz => {
+        const categoryMatch = activeCategory === 'All' || biz.category === activeCategory;
+        const searchTermMatch = !searchTerm || biz.name.toLowerCase().includes(searchTerm.toLowerCase()) || biz.description.toLowerCase().includes(searchTerm.toLowerCase());
+        const ratingMatch = ratingFilter === null || biz.rating >= ratingFilter;
+        return categoryMatch && searchTermMatch && ratingMatch;
+    });
 
   return (
     <div className="grid h-[calc(100vh_-_8rem)] grid-cols-1 gap-6 md:grid-cols-3 lg:grid-cols-4">
@@ -118,29 +126,51 @@ export default function ExplorePage() {
             <CardTitle>Explore</CardTitle>
              <div className="relative pt-2">
               <Search className="absolute left-2.5 top-4 h-4 w-4 text-muted-foreground" />
-              <Input placeholder="Search businesses..." className="pl-8" />
+              <Input 
+                placeholder="Search businesses..." 
+                className="pl-8" 
+                value={searchTerm}
+                onChange={e => setSearchTerm(e.target.value)}
+              />
             </div>
           </CardHeader>
           <CardContent className="flex flex-1 flex-col p-0">
-             <div className="p-6 pt-0">
-                <h3 className="mb-3 text-sm font-medium text-muted-foreground">Categories</h3>
-                <div className="flex flex-wrap gap-2">
-                    {categories.map(category => (
-                        <Button 
-                            key={category} 
-                            variant={activeCategory === category ? "default" : "outline"}
-                            size="sm"
-                            className="rounded-full"
-                            onClick={() => setActiveCategory(category)}
-                        >
-                            {category}
-                        </Button>
-                    ))}
+             <div className="p-6 pt-0 space-y-4">
+                <div>
+                    <h3 className="mb-3 text-sm font-medium text-muted-foreground">Categories</h3>
+                    <div className="flex flex-wrap gap-2">
+                        {categories.map(category => (
+                            <Button 
+                                key={category} 
+                                variant={activeCategory === category ? "default" : "outline"}
+                                size="sm"
+                                className="rounded-full"
+                                onClick={() => setActiveCategory(category)}
+                            >
+                                {category}
+                            </Button>
+                        ))}
+                    </div>
+                </div>
+                <div>
+                    <Label htmlFor="rating-filter" className="text-sm font-medium text-muted-foreground">Minimum Rating</Label>
+                     <Select onValueChange={(value) => setRatingFilter(value === '0' ? null : Number(value))}>
+                        <SelectTrigger className="w-full mt-1">
+                            <SelectValue placeholder="Any Rating" />
+                        </SelectTrigger>
+                        <SelectContent>
+                            <SelectItem value="0">Any Rating</SelectItem>
+                            <SelectItem value="4.5">4.5 Stars & Up</SelectItem>
+                            <SelectItem value="4">4 Stars & Up</SelectItem>
+                            <SelectItem value="3">3 Stars & Up</SelectItem>
+                        </SelectContent>
+                    </Select>
                 </div>
              </div>
-             <ScrollArea className="flex-1 min-h-0 px-6">
+             <Separator />
+             <ScrollArea className="flex-1 min-h-0 px-6 pt-6">
                 <div className="space-y-4 pb-6">
-                {filteredBusinesses.map((biz) => (
+                {filteredBusinesses.length > 0 ? filteredBusinesses.map((biz) => (
                   <div 
                     key={biz.id} 
                     className={cn(
@@ -162,7 +192,9 @@ export default function ExplorePage() {
                       </div>
                     </div>
                   </div>
-                ))}
+                )) : (
+                  <p className="text-center text-sm text-muted-foreground py-10">No businesses found.</p>
+                )}
               </div>
             </ScrollArea>
           </CardContent>
