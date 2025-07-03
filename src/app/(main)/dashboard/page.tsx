@@ -1,11 +1,14 @@
+'use client';
+
 import Image from 'next/image';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardFooter, CardHeader, CardTitle } from '@/components/ui/card';
 import { Textarea } from '@/components/ui/textarea';
 import { ThumbsUp, MessageCircle, Share2, MoreHorizontal } from 'lucide-react';
+import React, { useState } from 'react';
 
-const posts = [
+const initialPosts = [
   {
     id: 1,
     author: {
@@ -51,23 +54,54 @@ const posts = [
 ];
 
 export default function DashboardPage() {
+  const [posts, setPosts] = useState(initialPosts);
+  const [newPostContent, setNewPostContent] = useState('');
+
+  const handleCreatePost = () => {
+    if (!newPostContent.trim()) return;
+
+    const newPost = {
+      id: posts.length + 1,
+      author: {
+        name: 'David',
+        handle: '@david',
+        avatar: 'https://placehold.co/40x40.png',
+        type: 'individual',
+      },
+      content: newPostContent,
+      image: null,
+      imageHint: null,
+      likes: 0,
+      comments: 0,
+    };
+
+    setPosts([newPost, ...posts]);
+    setNewPostContent('');
+  };
+
+
   return (
     <div className="grid grid-cols-1 lg:grid-cols-3 gap-8 items-start">
       <div className="lg:col-span-2 space-y-6">
         <Card>
           <CardHeader>
-            <div className="flex items-center space-x-4">
+            <div className="flex items-start space-x-4">
               <Avatar>
                 <AvatarImage src="https://placehold.co/40x40.png" data-ai-hint="person portrait" />
                 <AvatarFallback>D</AvatarFallback>
               </Avatar>
               <div className="flex-1">
-                 <Textarea placeholder="What's on your mind, David?" className="bg-background" />
+                 <Textarea 
+                    placeholder="What's on your mind, David?" 
+                    className="bg-background"
+                    value={newPostContent}
+                    onChange={(e) => setNewPostContent(e.target.value)}
+                 />
               </div>
             </div>
           </CardHeader>
           <CardFooter className="flex justify-end">
-            <Button>Create Post</Button>
+            <Button onClick={handleCreatePost}>Create Post</Button>
           </CardFooter>
         </Card>
 

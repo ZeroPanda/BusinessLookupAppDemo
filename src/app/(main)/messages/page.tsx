@@ -1,9 +1,11 @@
+'use client';
+
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { Button } from '@/components/ui/button';
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Input } from '@/components/ui/input';
 import { ScrollArea } from '@/components/ui/scroll-area';
 import { Search, Send, Smile } from 'lucide-react';
+import React, { useState } from 'react';
 
 const conversations = [
   { id: 1, name: 'John The Plumber', avatar: 'https://placehold.co/40x40.png', dataAiHint: 'person portrait', lastMessage: 'Sure, I can be there at 3 PM.', unread: 2 },
@@ -12,7 +14,7 @@ const conversations = [
   { id: 4, name: 'Sparkle Cleaners', avatar: 'https://placehold.co/40x40.png', dataAiHint: 'cleaning logo', lastMessage: 'Yes, we do offer bi-weekly plans.', unread: 0 },
 ];
 
-const messages = [
+const initialMessages = [
   { from: 'me', text: 'Hi John, I need a quote for a leaky kitchen faucet. Are you available this week?' },
   { from: 'other', text: 'Hello! Yes, I can take a look. I have an opening tomorrow afternoon. Does 3 PM work for you?' },
   { from: 'me', text: 'That works perfectly! What\'s your estimated cost for a visit?' },
@@ -22,6 +24,22 @@ const messages = [
 ];
 
 export default function MessagesPage() {
+  const [messages, setMessages] = useState(initialMessages);
+  const [newMessage, setNewMessage] = useState('');
+
+  const handleSendMessage = () => {
+    if (!newMessage.trim()) return;
+    setMessages([...messages, { from: 'me', text: newMessage }]);
+    setNewMessage('');
+  };
+
+  const handleKeyPress = (e: React.KeyboardEvent<HTMLInputElement>) => {
+    if (e.key === 'Enter') {
+      handleSendMessage();
+    }
+  };
+
+
   return (
     <div className="h-[calc(100vh-theme(spacing.32))]">
     <Card className="h-full grid grid-cols-1 md:grid-cols-3 lg:grid-cols-4">
@@ -74,10 +92,16 @@ export default function MessagesPage() {
         </ScrollArea>
         <div className="p-4 border-t bg-background">
             <div className="relative">
-                <Input placeholder="Type a message..." className="pr-20"/>
+                <Input 
+                  placeholder="Type a message..." 
+                  className="pr-20"
+                  value={newMessage}
+                  onChange={(e) => setNewMessage(e.target.value)}
+                  onKeyPress={handleKeyPress}
+                />
                 <div className="absolute inset-y-0 right-0 flex items-center">
                     <Button variant="ghost" size="icon"><Smile className="w-5 h-5"/></Button>
-                    <Button variant="ghost" size="icon"><Send className="w-5 h-5"/></Button>
+                    <Button variant="ghost" size="icon" onClick={handleSendMessage}><Send className="w-5 h-5"/></Button>
                 </div>
             </div>
         </div>
