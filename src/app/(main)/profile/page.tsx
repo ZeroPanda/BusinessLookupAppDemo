@@ -16,10 +16,31 @@ const services = [
 ];
 
 const reviews = [
-    {name: 'Local Cafe', avatar: 'https://placehold.co/40x40.png', dataAiHint: 'cafe logo', rating: 5, text: 'Creative Solutions completely revamped our online presence. The new website is beautiful and so much easier to navigate. Highly recommended!', service: 'Website Design'},
-    {name: 'Handy Andy', avatar: 'https://placehold.co/40x40.png', dataAiHint: 'person portrait', rating: 5, text: 'They designed a fantastic logo and business cards for my handyman service. The process was smooth and the result was professional.', service: 'Branding & Logo'},
-    {name: 'Downtown Books', avatar: 'https://placehold.co/40x40.png', dataAiHint: 'bookstore logo', rating: 4, text: 'Their social media management has really helped us connect with the community. We\'ve seen a definite increase in foot traffic.', service: 'Social Media Mgmt'},
+    {name: 'Local Cafe', avatar: 'https://placehold.co/40x40.png', dataAiHint: 'cafe logo', rating: 5, text: '@CreativeSolutions completely revamped our online presence. The new website is beautiful and so much easier to navigate. Highly recommended!', service: 'Website Design'},
+    {name: 'Handy Andy', avatar: 'https://placehold.co/40x40.png', dataAiHint: 'person portrait', rating: 5, text: 'They designed a fantastic #BrandingLogo and business cards for my handyman service. The process was smooth and the result was professional.', service: 'Branding & Logo'},
+    {name: 'Downtown Books', avatar: 'https://placehold.co/40x40.png', dataAiHint: 'bookstore logo', rating: 4, text: 'Their #SocialMediaMgmt has really helped us connect with the community. We\'ve seen a definite increase in foot traffic thanks to @CreativeSolutions.', service: 'Social Media Mgmt'},
 ];
+
+const renderReviewText = (text: string) => {
+    const parts = text.split(/([@#]\w+)/g);
+    return parts.filter(part => part).map((part, index) => {
+        if (part.startsWith('@')) {
+            return (
+                <Badge key={index} variant="secondary" className="font-medium cursor-pointer hover:bg-secondary/80">
+                    {part}
+                </Badge>
+            );
+        }
+        if (part.startsWith('#')) {
+            return (
+                <Badge key={index} variant="outline" className="font-medium cursor-pointer hover:bg-accent">
+                    {part}
+                </Badge>
+            );
+        }
+        return <span key={index}>{part}</span>;
+    });
+};
 
 export default function ProfilePage() {
   return (
@@ -182,7 +203,7 @@ export default function ProfilePage() {
                                     Review for: <span className="text-foreground">{review.service}</span>
                                 </p>
                             )}
-                            <p>{review.text}</p>
+                            <div className="text-sm leading-relaxed">{renderReviewText(review.text)}</div>
                         </CardContent>
                     </Card>
                 ))}
