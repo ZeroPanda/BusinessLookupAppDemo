@@ -62,25 +62,19 @@ export default function MainLayout({
           <SidebarContent>
             <SidebarMenu>
               <SidebarMenuItem>
-                <Link href="/dashboard" legacyBehavior passHref>
-                  <SidebarMenuButton asChild isActive={isActive('/dashboard')}>
-                    <a><LayoutGrid /><span>Dashboard</span></a>
-                  </SidebarMenuButton>
-                </Link>
+                <SidebarMenuButton asChild isActive={isActive('/dashboard')}>
+                  <Link href="/dashboard"><LayoutGrid /><span>Dashboard</span></Link>
+                </SidebarMenuButton>
               </SidebarMenuItem>
               <SidebarMenuItem>
-                <Link href="/messages" legacyBehavior passHref>
-                  <SidebarMenuButton asChild isActive={isActive('/messages')}>
-                   <a><MessageSquare /><span>Messages</span></a>
-                  </SidebarMenuButton>
-                </Link>
+                <SidebarMenuButton asChild isActive={isActive('/messages')}>
+                 <Link href="/messages"><MessageSquare /><span>Messages</span></Link>
+                </SidebarMenuButton>
               </SidebarMenuItem>
               <SidebarMenuItem>
-                <Link href="/profile" legacyBehavior passHref>
-                  <SidebarMenuButton asChild isActive={isActive('/profile')}>
-                    <a><User /><span>Profile</span></a>
-                  </SidebarMenuButton>
-                </Link>
+                <SidebarMenuButton asChild isActive={isActive('/profile')}>
+                  <Link href="/profile"><User /><span>Profile</span></Link>
+                </SidebarMenuButton>
               </SidebarMenuItem>
             </SidebarMenu>
           </SidebarContent>
@@ -90,11 +84,9 @@ export default function MainLayout({
                     <SidebarMenuButton><Settings /><span>Settings</span></SidebarMenuButton>
                 </SidebarMenuItem>
                 <SidebarMenuItem>
-                  <Link href="/" legacyBehavior passHref>
-                    <SidebarMenuButton asChild>
-                      <a><LogOut /><span>Logout</span></a>
-                    </SidebarMenuButton>
-                  </Link>
+                  <SidebarMenuButton asChild>
+                    <Link href="/"><LogOut /><span>Logout</span></Link>
+                  </SidebarMenuButton>
                 </SidebarMenuItem>
              </SidebarMenu>
           </SidebarFooter>
