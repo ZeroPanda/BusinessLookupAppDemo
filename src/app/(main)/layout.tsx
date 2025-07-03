@@ -9,6 +9,7 @@ import {
   LogOut,
   Bell,
   Search,
+  Compass,
 } from 'lucide-react';
 import {
   SidebarProvider,
@@ -64,6 +65,11 @@ export default function MainLayout({
               <SidebarMenuItem>
                 <SidebarMenuButton asChild isActive={isActive('/dashboard')}>
                   <Link href="/dashboard"><LayoutGrid /><span>Dashboard</span></Link>
+                </SidebarMenuButton>
+              </SidebarMenuItem>
+              <SidebarMenuItem>
+                <SidebarMenuButton asChild isActive={isActive('/explore')}>
+                  <Link href="/explore"><Compass /><span>Explore</span></Link>
                 </SidebarMenuButton>
               </SidebarMenuItem>
               <SidebarMenuItem>
