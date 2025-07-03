@@ -120,17 +120,17 @@ const Map = dynamic(() => import('./map').then((mod) => mod.ExploreMap), {
 });
 
 export default function ExplorePage() {
-    const [selectedBusiness, setSelectedBusiness] = useState(businesses[0]);
+    const [selectedBusiness, setSelectedBusiness] = useState<any>(businesses[0]);
     const [activeCategory, setActiveCategory] = useState('All');
     const [searchTerm, setSearchTerm] = useState('');
     const [ratingFilter, setRatingFilter] = useState<number | null>(null);
 
-    const filteredBusinesses = businesses.filter(biz => {
+    const filteredBusinesses = useMemo(() => businesses.filter(biz => {
         const categoryMatch = activeCategory === 'All' || biz.category === activeCategory;
         const searchTermMatch = !searchTerm || biz.name.toLowerCase().includes(searchTerm.toLowerCase()) || biz.description.toLowerCase().includes(searchTerm.toLowerCase());
         const ratingMatch = ratingFilter === null || biz.rating >= ratingFilter;
         return categoryMatch && searchTermMatch && ratingMatch;
-    });
+    }), [activeCategory, searchTerm, ratingFilter]);
 
     const getInitials = (name: string) => name.split(' ').map(n => n[0]).join('');
 
