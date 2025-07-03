@@ -24,13 +24,20 @@ export const ExploreMap = ({ businesses, selectedBusiness }: ExploreMapProps) =>
   const defaultZoom = 13;
   const [map, setMap] = useState<LeafletMap | null>(null);
 
+  // This effect handles flying to the selected business.
   useEffect(() => {
-    if (map) {
-      const center = selectedBusiness?.coords || defaultPosition;
-      const zoom = selectedBusiness ? 15 : defaultZoom;
-      map.flyTo(center, zoom);
+    if (map && selectedBusiness) {
+      map.flyTo(selectedBusiness.coords, 15);
     }
   }, [selectedBusiness, map]);
+  
+  // This effect handles cleaning up the map instance when the component unmounts.
+  useEffect(() => {
+    return () => {
+      map?.remove();
+    };
+  }, [map]);
+
 
   return (
     <MapContainer
