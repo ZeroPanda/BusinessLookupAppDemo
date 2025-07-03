@@ -19,6 +19,7 @@ const initialPosts = [
       name: 'Creative Solutions',
       handle: '@creatives',
       avatar: 'https://placehold.co/40x40.png',
+      avatarHint: 'tech logo',
       type: 'business',
       rating: 4.9,
       bio: 'Full-service digital agency specializing in web design, branding, and marketing for local businesses.',
@@ -40,6 +41,7 @@ const initialPosts = [
         name: 'David',
         handle: '@david',
         avatar: 'https://placehold.co/40x40.png',
+        avatarHint: 'person portrait',
         type: 'individual',
         rating: null,
         bio: 'Exploring the neighborhood and connecting with local businesses.',
@@ -64,6 +66,7 @@ const initialPosts = [
       name: 'Green Leaf Gardening',
       handle: '@greenleaf',
       avatar: 'https://placehold.co/40x40.png',
+      avatarHint: 'gardening logo',
       type: 'business',
       rating: 4.8,
       bio: 'Lawn care, landscaping, and all your gardening needs.',
@@ -86,6 +89,7 @@ const initialPosts = [
       name: 'Pawsitive Pups',
       handle: '@pawsitive',
       avatar: 'https://placehold.co/40x40.png',
+      avatarHint: 'pet logo',
       type: 'business',
       rating: 5.0,
       bio: 'Dog walking & pet sitting services. We love your pets!',
@@ -107,6 +111,7 @@ const initialPosts = [
       name: 'John The Plumber',
       handle: '@johnplumbs',
       avatar: 'https://placehold.co/40x40.png',
+      avatarHint: 'person portrait',
       type: 'business',
       rating: 4.7,
       bio: 'Your friendly neighborhood plumber. Fast, reliable, and affordable service.',
@@ -165,6 +170,7 @@ export default function DashboardPage() {
         name: 'David',
         handle: '@david',
         avatar: 'https://placehold.co/40x40.png',
+        avatarHint: 'person portrait',
         type: 'individual',
         rating: null,
         bio: 'Exploring the neighborhood and connecting with local businesses.',
@@ -221,7 +227,7 @@ export default function DashboardPage() {
                     <PopoverTrigger asChild>
                       <div className="flex items-center space-x-3 cursor-pointer group">
                         <Avatar>
-                          <AvatarImage src={post.author.avatar} data-ai-hint={post.author.type === 'business' ? 'company logo' : 'person'} />
+                          <AvatarImage src={post.author.avatar} data-ai-hint={post.author.avatarHint || 'person'} />
                           <AvatarFallback>{post.author.name.charAt(0)}</AvatarFallback>
                         </Avatar>
                         <div>
@@ -249,7 +255,7 @@ export default function DashboardPage() {
                     <PopoverContent className="w-80" side="bottom" align="start">
                       <div className="flex gap-4">
                         <Avatar className="h-16 w-16">
-                          <AvatarImage src={post.author.avatar} data-ai-hint={post.author.type === 'business' ? 'company logo' : 'person'} />
+                          <AvatarImage src={post.author.avatar} data-ai-hint={post.author.avatarHint || 'person'} />
                           <AvatarFallback>{post.author.name.charAt(0)}</AvatarFallback>
                         </Avatar>
                         <div className="space-y-1">
