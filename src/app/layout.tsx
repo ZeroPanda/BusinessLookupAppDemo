@@ -4,8 +4,8 @@ import { Toaster } from "@/components/ui/toaster";
 import { ThemeProvider } from '@/components/theme-provider';
 
 export const metadata: Metadata = {
-  title: 'Local Connect',
-  description: 'Connecting communities with local businesses and services.',
+  title: 'Neighborly',
+  description: 'Your friendly neighborhood hub for local services and community.',
   icons: {
     icon: "/favicon.ico",
   }

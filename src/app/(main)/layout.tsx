@@ -49,7 +49,7 @@ export default function MainLayout({
           <Link href="/dashboard" className="flex items-center gap-2 font-semibold">
             <Logo />
             <h1 className="text-lg font-semibold font-headline text-primary hidden sm:block">
-              Local Connect
+              Neighborly
             </h1>
           </Link>
         </div>
