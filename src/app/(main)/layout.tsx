@@ -22,6 +22,7 @@ import {
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { Input } from '@/components/ui/input';
 import { cn } from '@/lib/utils';
+import { ThemeToggle } from '@/components/theme-toggle';
 
 export default function MainLayout({
   children,
@@ -42,7 +43,7 @@ export default function MainLayout({
   ];
 
   return (
-    <div className="flex flex-col min-h-screen bg-secondary/60">
+    <div className="flex flex-col min-h-screen bg-secondary">
       <header className="sticky top-0 z-30 flex h-16 items-center gap-4 border-b bg-background px-4 md:px-6">
         <div className="flex items-center gap-4">
           <Link href="/dashboard" className="flex items-center gap-2 font-semibold">
@@ -62,8 +63,8 @@ export default function MainLayout({
               className={cn(
                 'flex items-center gap-2 rounded-md px-3 py-2 text-sm font-medium transition-colors',
                 isActive(item.href)
-                  ? 'bg-secondary text-secondary-foreground'
-                  : 'text-muted-foreground hover:bg-secondary/60'
+                  ? 'bg-primary/10 text-primary'
+                  : 'text-muted-foreground hover:bg-primary/5 hover:text-primary'
               )}
             >
               <item.icon className="h-4 w-4" />
@@ -81,6 +82,7 @@ export default function MainLayout({
                     className="w-full appearance-none bg-secondary pl-9 md:w-64 rounded-full"
                 />
             </div>
+            <ThemeToggle />
             <Button variant="ghost" size="icon" className="rounded-full">
                 <Bell className="h-5 w-5" />
                 <span className="sr-only">Toggle notifications</span>
@@ -124,8 +126,8 @@ export default function MainLayout({
                 className={cn(
                   'flex flex-col items-center justify-center gap-1 rounded-md p-2 text-sm font-medium transition-colors',
                   isActive(item.href)
-                    ? 'bg-secondary text-primary'
-                    : 'text-muted-foreground hover:bg-secondary/60'
+                    ? 'bg-primary/10 text-primary'
+                    : 'text-muted-foreground hover:bg-primary/5'
                 )}
               >
                 <item.icon className="h-5 w-5" />
