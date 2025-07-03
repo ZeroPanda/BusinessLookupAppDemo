@@ -171,7 +171,7 @@ export default function ProfilePage() {
                         </div>
                     </CardHeader>
                     <CardContent>
-                        <p>Just launched our new website design package! Perfect for small businesses looking to make a big impact online. DM for a free consultation! #webdesign #localbusiness</p>
+                        <div className="text-sm leading-relaxed">{renderReviewText("Just launched a new website for @LocalCafe! They're thrilled with their new online presence. Check it out! #webdesign #localbusiness")}</div>
                         <div className="mt-4 rounded-lg overflow-hidden border">
                             <Image src="https://placehold.co/600x400.png" data-ai-hint="website design" alt="Post image" width={600} height={400} className="object-cover w-full"/>
                         </div>

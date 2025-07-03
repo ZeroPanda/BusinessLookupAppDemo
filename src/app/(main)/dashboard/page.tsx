@@ -26,7 +26,7 @@ const initialPosts = [
       following: 2154,
     },
     title: '50% Off Web Design',
-    content: 'Limited time offer! Get 50% off our standard web design package. Perfect for new businesses. DM for a free consultation!',
+    content: 'Limited time offer! Get 50% off our standard #webdesign package. Perfect for new businesses. DM @creatives for a free consultation!',
     validUntil: 'Ends Dec 31st',
     image: 'https://placehold.co/600x400.png',
     imageHint: 'website design',
@@ -51,7 +51,7 @@ const initialPosts = [
       handle: '@sweetspot'
     },
     rating: 5,
-    content: 'Just tried the almond croissant at The Sweet Spot Bakery, and it was heavenly! 🥐 The staff is super friendly too. Highly recommend stopping by!',
+    content: 'Just tried the almond croissant at @sweetspot, and it was heavenly! 🥐 The staff is super friendly too. Highly recommend stopping by! #foodreview',
     image: 'https://placehold.co/600x400.png',
     imageHint: 'bakery croissants',
     likes: 18,
@@ -73,7 +73,7 @@ const initialPosts = [
     eventName: 'Free Gardening Workshop',
     date: 'Saturday, Aug 10th @ 11:00 AM',
     location: 'Our Store',
-    content: 'Join us for a free workshop on container gardening. Learn how to grow your own herbs and vegetables on your balcony or patio!',
+    content: 'Join us for a free workshop on container gardening. Learn how to grow your own herbs and vegetables on your balcony or patio! #gardening #workshop',
     image: 'https://placehold.co/600x400.png',
     imageHint: 'gardening workshop',
     likes: 35,
@@ -94,7 +94,7 @@ const initialPosts = [
     },
     productName: 'Organic Dog Treats',
     price: '$12.99',
-    content: 'New in stock! Our homemade organic peanut butter dog treats. Your furry friends will love them!',
+    content: 'New in stock! Our homemade organic peanut butter dog treats. Your furry friends at @pawsitive will love them! #dogtreats #pets',
     image: 'https://placehold.co/600x400.png',
     imageHint: 'dog treats',
     likes: 62,
@@ -113,7 +113,7 @@ const initialPosts = [
       followers: 231,
       following: 45,
     },
-    content: 'Just finished a big repiping job in the downtown area. If you\'re experiencing low water pressure in an older home, give me a call! 555-1234.',
+    content: 'Just finished a big repiping job in the downtown area. If you\'re experiencing low water pressure in an older home, give @johnplumbs a call! 555-1234. #plumbing',
     image: null,
     imageHint: null,
     likes: 12,
@@ -127,6 +127,27 @@ const postTypeConfig: any = {
   event: { icon: Calendar, color: 'border-l-chart-3', title: 'Upcoming Event' },
   product: { icon: ShoppingBag, color: 'border-l-chart-2', title: 'New Product' },
   status: { icon: FileText, color: 'border-l-transparent', title: 'Status Update' },
+};
+
+const renderPostText = (text: string) => {
+    const parts = text.split(/([@#]\w+)/g);
+    return parts.filter(part => part).map((part, index) => {
+        if (part.startsWith('@')) {
+            return (
+                <Badge key={index} variant="secondary" className="font-medium cursor-pointer hover:bg-secondary/80">
+                    {part}
+                </Badge>
+            );
+        }
+        if (part.startsWith('#')) {
+            return (
+                <Badge key={index} variant="outline" className="font-medium cursor-pointer hover:bg-accent">
+                    {part}
+                </Badge>
+            );
+        }
+        return <span key={index}>{part}</span>;
+    });
 };
 
 
@@ -303,7 +324,7 @@ export default function DashboardPage() {
                   </div>
                 )}
 
-                <p className="whitespace-pre-wrap">{post.content}</p>
+                <div className="text-sm leading-relaxed">{renderPostText(post.content)}</div>
                 {post.image && (
                   <div className="mt-4 rounded-lg overflow-hidden border">
                     <Image
