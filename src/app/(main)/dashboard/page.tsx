@@ -107,7 +107,7 @@ const initialPosts = [
       name: 'John The Plumber',
       handle: '@johnplumbs',
       avatar: 'https://placehold.co/40x40.png',
-      type: 'individual',
+      type: 'business',
       rating: 4.7,
       bio: 'Your friendly neighborhood plumber. Fast, reliable, and affordable service.',
       followers: 231,
@@ -209,7 +209,18 @@ export default function DashboardPage() {
                               <BadgeCheck className="w-4 h-4 text-primary" />
                             )}
                           </div>
-                          <p className="text-sm text-muted-foreground">{post.author.handle}</p>
+                          <div className="flex items-center gap-1.5 text-sm">
+                            <p className="text-muted-foreground">{post.author.handle}</p>
+                            {post.author.type === 'business' && post.author.rating && (
+                              <>
+                                <span className="text-muted-foreground text-xs">·</span>
+                                <div className="flex items-center gap-1">
+                                  <Star className="w-3.5 h-3.5 text-yellow-500 fill-yellow-500" />
+                                  <span className="font-medium text-foreground">{post.author.rating.toFixed(1)}</span>
+                                </div>
+                              </>
+                            )}
+                          </div>
                         </div>
                       </div>
                     </PopoverTrigger>
@@ -231,9 +242,17 @@ export default function DashboardPage() {
                         </div>
                       </div>
                       <p className="text-sm my-4">{post.author.bio}</p>
-                      <div className="flex gap-4 text-sm border-t pt-3">
-                        <div><span className="font-bold">{post.author.following}</span> <span className="text-muted-foreground">Following</span></div>
-                        <div><span className="font-bold">{post.author.followers}</span> <span className="text-muted-foreground">Followers</span></div>
+                      <div className="flex items-center justify-between text-sm border-t pt-3">
+                        <div className="flex gap-4">
+                          <div><span className="font-bold">{post.author.following}</span> <span className="text-muted-foreground">Following</span></div>
+                          <div><span className="font-bold">{post.author.followers}</span> <span className="text-muted-foreground">Followers</span></div>
+                        </div>
+                         {post.author.type === 'business' && post.author.rating && (
+                            <div className="flex items-center gap-1 text-sm">
+                                <Star className="w-4 h-4 text-yellow-500 fill-yellow-500" />
+                                <span className="font-semibold text-foreground">{post.author.rating.toFixed(1)}</span>
+                            </div>
+                        )}
                       </div>
                     </PopoverContent>
                   </Popover>
