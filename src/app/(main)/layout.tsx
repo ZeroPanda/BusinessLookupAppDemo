@@ -5,24 +5,10 @@ import {
   LayoutGrid,
   MessageSquare,
   User,
-  Settings,
-  LogOut,
   Bell,
   Search,
   Compass,
 } from 'lucide-react';
-import {
-  SidebarProvider,
-  Sidebar,
-  SidebarHeader,
-  SidebarContent,
-  SidebarMenu,
-  SidebarMenuItem,
-  SidebarMenuButton,
-  SidebarFooter,
-  SidebarTrigger,
-  SidebarInset,
-} from '@/components/ui/sidebar';
 import { Logo } from '@/components/logo';
 import { Button } from '@/components/ui/button';
 import {
@@ -35,6 +21,7 @@ import {
 } from '@/components/ui/dropdown-menu';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { Input } from '@/components/ui/input';
+import { cn } from '@/lib/utils';
 
 export default function MainLayout({
   children,
@@ -44,108 +31,109 @@ export default function MainLayout({
   const pathname = usePathname();
 
   const isActive = (path: string) => {
-    if (path === '/dashboard') return pathname === path;
-    return pathname.startsWith(path);
+    return path === '/dashboard' ? pathname === path : pathname.startsWith(path);
   };
-  
+
+  const navItems = [
+    { href: '/dashboard', label: 'Dashboard', icon: LayoutGrid },
+    { href: '/explore', label: 'Explore', icon: Compass },
+    { href: '/messages', label: 'Messages', icon: MessageSquare },
+    { href: '/profile', label: 'Profile', icon: User },
+  ];
+
   return (
-    <SidebarProvider>
-      <div className="min-h-screen flex">
-        <Sidebar>
-          <SidebarHeader>
-            <div className="flex items-center space-x-2">
-              <Logo />
-              <h1 className="text-lg font-semibold font-headline text-primary">
-                Local Connect
-              </h1>
+    <div className="flex flex-col min-h-screen bg-secondary/60">
+      <header className="sticky top-0 z-30 flex h-16 items-center gap-4 border-b bg-background px-4 md:px-6">
+        <div className="flex items-center gap-4">
+          <Link href="/dashboard" className="flex items-center gap-2 font-semibold">
+            <Logo />
+            <h1 className="text-lg font-semibold font-headline text-primary hidden sm:block">
+              Local Connect
+            </h1>
+          </Link>
+        </div>
+
+        {/* Desktop Navigation */}
+        <nav className="hidden md:flex items-center gap-2 mx-auto">
+          {navItems.map((item) => (
+            <Link
+              key={item.href}
+              href={item.href}
+              className={cn(
+                'flex items-center gap-2 rounded-md px-3 py-2 text-sm font-medium transition-colors',
+                isActive(item.href)
+                  ? 'bg-secondary text-secondary-foreground'
+                  : 'text-muted-foreground hover:bg-secondary/60'
+              )}
+            >
+              <item.icon className="h-4 w-4" />
+              <span>{item.label}</span>
+            </Link>
+          ))}
+        </nav>
+
+        <div className="flex items-center gap-2 ml-auto">
+            <div className="relative hidden sm:block">
+                <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
+                <Input
+                    type="search"
+                    placeholder="Search..."
+                    className="w-full appearance-none bg-secondary pl-9 md:w-64 rounded-full"
+                />
             </div>
-          </SidebarHeader>
-          <SidebarContent>
-            <SidebarMenu>
-              <SidebarMenuItem>
-                <SidebarMenuButton asChild isActive={isActive('/dashboard')}>
-                  <Link href="/dashboard"><LayoutGrid /><span>Dashboard</span></Link>
-                </SidebarMenuButton>
-              </SidebarMenuItem>
-              <SidebarMenuItem>
-                <SidebarMenuButton asChild isActive={isActive('/explore')}>
-                  <Link href="/explore"><Compass /><span>Explore</span></Link>
-                </SidebarMenuButton>
-              </SidebarMenuItem>
-              <SidebarMenuItem>
-                <SidebarMenuButton asChild isActive={isActive('/messages')}>
-                 <Link href="/messages"><MessageSquare /><span>Messages</span></Link>
-                </SidebarMenuButton>
-              </SidebarMenuItem>
-              <SidebarMenuItem>
-                <SidebarMenuButton asChild isActive={isActive('/profile')}>
-                  <Link href="/profile"><User /><span>Profile</span></Link>
-                </SidebarMenuButton>
-              </SidebarMenuItem>
-            </SidebarMenu>
-          </SidebarContent>
-          <SidebarFooter>
-             <SidebarMenu>
-                <SidebarMenuItem>
-                    <SidebarMenuButton><Settings /><span>Settings</span></SidebarMenuButton>
-                </SidebarMenuItem>
-                <SidebarMenuItem>
-                  <SidebarMenuButton asChild>
-                    <Link href="/"><LogOut /><span>Logout</span></Link>
-                  </SidebarMenuButton>
-                </SidebarMenuItem>
-             </SidebarMenu>
-          </SidebarFooter>
-        </Sidebar>
-        <SidebarInset>
-          <div className="flex flex-col w-full">
-            <header className="sticky top-0 z-10 flex h-16 items-center gap-4 border-b bg-background px-4 md:px-6">
-                <SidebarTrigger className="md:hidden" />
-                <div className="w-full flex-1">
-                    <form>
-                        <div className="relative">
-                            <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
-                            <Input
-                                type="search"
-                                placeholder="Search services, businesses..."
-                                className="w-full appearance-none bg-secondary pl-9 md:w-2/3 lg:w-1/3 rounded-full"
-                            />
-                        </div>
-                    </form>
-                </div>
-                <Button variant="ghost" size="icon" className="rounded-full">
-                    <Bell className="h-5 w-5" />
-                    <span className="sr-only">Toggle notifications</span>
-                </Button>
-                <DropdownMenu>
-                    <DropdownMenuTrigger asChild>
-                        <Button variant="ghost" size="icon" className="rounded-full">
-                            <Avatar className="h-8 w-8">
-                                <AvatarImage src="https://placehold.co/40x40.png" alt="David" data-ai-hint="person portrait" />
-                                <AvatarFallback>D</AvatarFallback>
-                            </Avatar>
-                        </Button>
-                    </DropdownMenuTrigger>
-                    <DropdownMenuContent align="end">
-                        <DropdownMenuLabel>David's Account</DropdownMenuLabel>
-                        <DropdownMenuSeparator />
-                        <DropdownMenuItem asChild>
-                           <Link href="/profile">Profile</Link>
-                        </DropdownMenuItem>
-                        <DropdownMenuItem>Settings</DropdownMenuItem>
-                        <DropdownMenuSeparator />
-                        <DropdownMenuItem asChild>
-                           <Link href="/">Logout</Link>
-                        </DropdownMenuItem>
-                    </DropdownMenuContent>
-                </DropdownMenu>
-            </header>
-            <main className="flex-1 p-4 md:p-6 lg:p-8 bg-secondary/60">
-                {children}
-            </main>
-          </div>
-        </SidebarInset>
-      </div>
-    </SidebarProvider>
+            <Button variant="ghost" size="icon" className="rounded-full">
+                <Bell className="h-5 w-5" />
+                <span className="sr-only">Toggle notifications</span>
+            </Button>
+            <DropdownMenu>
+                <DropdownMenuTrigger asChild>
+                    <Button variant="ghost" size="icon" className="rounded-full">
+                        <Avatar className="h-8 w-8">
+                            <AvatarImage src="https://placehold.co/40x40.png" alt="David" data-ai-hint="person portrait" />
+                            <AvatarFallback>D</AvatarFallback>
+                        </Avatar>
+                    </Button>
+                </DropdownMenuTrigger>
+                <DropdownMenuContent align="end">
+                    <DropdownMenuLabel>David's Account</DropdownMenuLabel>
+                    <DropdownMenuSeparator />
+                    <DropdownMenuItem asChild>
+                       <Link href="/profile">Profile</Link>
+                    </DropdownMenuItem>
+                    <DropdownMenuItem>Settings</DropdownMenuItem>
+                    <DropdownMenuSeparator />
+                    <DropdownMenuItem asChild>
+                       <Link href="/">Logout</Link>
+                    </DropdownMenuItem>
+                </DropdownMenuContent>
+            </DropdownMenu>
+        </div>
+      </header>
+      
+      <main className="flex-1 p-4 md:p-6 lg:p-8 pb-24 md:pb-8">
+        {children}
+      </main>
+
+      {/* Mobile Bottom Navigation */}
+      <footer className="fixed bottom-0 left-0 right-0 z-30 border-t bg-background p-2 md:hidden">
+        <nav className="grid grid-cols-4 gap-2">
+            {navItems.map((item) => (
+              <Link
+                key={item.href}
+                href={item.href}
+                className={cn(
+                  'flex flex-col items-center justify-center gap-1 rounded-md p-2 text-sm font-medium transition-colors',
+                  isActive(item.href)
+                    ? 'bg-secondary text-primary'
+                    : 'text-muted-foreground hover:bg-secondary/60'
+                )}
+              >
+                <item.icon className="h-5 w-5" />
+                <span className="text-xs">{item.label}</span>
+              </Link>
+            ))}
+        </nav>
+      </footer>
+    </div>
   );
 }
