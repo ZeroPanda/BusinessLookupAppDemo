@@ -1,7 +1,7 @@
 import Image from 'next/image';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { Button } from '@/components/ui/button';
-import { Card, CardContent, CardFooter, CardHeader } from '@/components/ui/card';
+import { Card, CardContent, CardFooter, CardHeader, CardTitle } from '@/components/ui/card';
 import { Textarea } from '@/components/ui/textarea';
 import { ThumbsUp, MessageCircle, Share2, MoreHorizontal } from 'lucide-react';
 
@@ -58,11 +58,11 @@ export default function DashboardPage() {
           <CardHeader>
             <div className="flex items-center space-x-4">
               <Avatar>
-                <AvatarImage src="https://placehold.co/40x40.png" data-ai-hint="person" />
-                <AvatarFallback>JP</AvatarFallback>
+                <AvatarImage src="https://placehold.co/40x40.png" data-ai-hint="person portrait" />
+                <AvatarFallback>D</AvatarFallback>
               </Avatar>
               <div className="flex-1">
-                 <Textarea placeholder="What's on your mind?" className="bg-background" />
+                 <Textarea placeholder="What's on your mind, David?" className="bg-background" />
               </div>
             </div>
           </CardHeader>

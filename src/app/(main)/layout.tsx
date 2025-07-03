@@ -115,18 +115,22 @@ export default function MainLayout({
                     <DropdownMenuTrigger asChild>
                         <Button variant="ghost" size="icon" className="rounded-full">
                             <Avatar className="h-8 w-8">
-                                <AvatarImage src="https://placehold.co/40x40.png" alt="@shadcn" data-ai-hint="person" />
-                                <AvatarFallback>JP</AvatarFallback>
+                                <AvatarImage src="https://placehold.co/40x40.png" alt="David" data-ai-hint="person portrait" />
+                                <AvatarFallback>D</AvatarFallback>
                             </Avatar>
                         </Button>
                     </DropdownMenuTrigger>
                     <DropdownMenuContent align="end">
-                        <DropdownMenuLabel>My Account</DropdownMenuLabel>
+                        <DropdownMenuLabel>David's Account</DropdownMenuLabel>
                         <DropdownMenuSeparator />
-                        <DropdownMenuItem>Profile</DropdownMenuItem>
+                        <DropdownMenuItem asChild>
+                           <Link href="/profile">Profile</Link>
+                        </DropdownMenuItem>
                         <DropdownMenuItem>Settings</DropdownMenuItem>
                         <DropdownMenuSeparator />
-                        <DropdownMenuItem>Logout</DropdownMenuItem>
+                        <DropdownMenuItem asChild>
+                           <Link href="/">Logout</Link>
+                        </DropdownMenuItem>
                     </DropdownMenuContent>
                 </DropdownMenu>
             </header>
