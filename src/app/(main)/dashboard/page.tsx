@@ -5,8 +5,9 @@ import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardFooter, CardHeader, CardTitle } from '@/components/ui/card';
 import { Textarea } from '@/components/ui/textarea';
-import { ThumbsUp, MessageCircle, Share2, MoreHorizontal } from 'lucide-react';
+import { ThumbsUp, MessageCircle, Share2, MoreHorizontal, BadgeCheck } from 'lucide-react';
 import React, { useState } from 'react';
+import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover';
 
 const initialPosts = [
   {
@@ -16,6 +17,10 @@ const initialPosts = [
       handle: '@creatives',
       avatar: 'https://placehold.co/40x40.png',
       type: 'business',
+      rating: 4.9,
+      bio: 'Full-service digital agency specializing in web design, branding, and marketing for local businesses.',
+      followers: 18700,
+      following: 2154,
     },
     content: 'Just launched our new website design package! Perfect for small businesses looking to make a big impact online. DM for a free consultation! #webdesign #localbusiness',
     image: 'https://placehold.co/600x400.png',
@@ -29,7 +34,11 @@ const initialPosts = [
       name: 'John The Plumber',
       handle: '@johnplumbs',
       avatar: 'https://placehold.co/40x40.png',
-      type: 'individual'
+      type: 'individual',
+      rating: 4.7,
+      bio: 'Your friendly neighborhood plumber. Fast, reliable, and affordable service.',
+      followers: 231,
+      following: 45,
     },
     content: 'Leaky faucet? Clogged drain? I\'m available for plumbing emergencies all week. Fast, reliable, and affordable service. Call me at 555-1234.',
     image: null,
@@ -44,6 +53,10 @@ const initialPosts = [
       handle: '@sweetspot',
       avatar: 'https://placehold.co/40x40.png',
       type: 'business',
+      rating: 5.0,
+      bio: 'Freshly baked goods made with love. Come and get them while they are hot! 🥐',
+      followers: 3456,
+      following: 121,
     },
     content: 'Fresh batch of our famous croissants are out of the oven! Come and get them while they are hot. 🥐 We are open until 6 PM today.',
     image: 'https://placehold.co/600x400.png',
@@ -67,6 +80,10 @@ export default function DashboardPage() {
         handle: '@david',
         avatar: 'https://placehold.co/40x40.png',
         type: 'individual',
+        rating: null,
+        bio: 'Exploring the neighborhood and connecting with local businesses.',
+        followers: 12,
+        following: 88,
       },
       content: newPostContent,
       image: null,
@@ -110,19 +127,52 @@ export default function DashboardPage() {
             <Card key={post.id}>
               <CardHeader>
                 <div className="flex items-center justify-between">
-                    <div className="flex items-center space-x-3">
-                    <Avatar>
-                        <AvatarImage src={post.author.avatar} data-ai-hint={post.author.type === 'business' ? 'company logo' : 'person'} />
-                        <AvatarFallback>{post.author.name.charAt(0)}</AvatarFallback>
-                    </Avatar>
-                    <div>
-                        <p className="font-semibold">{post.author.name}</p>
-                        <p className="text-sm text-muted-foreground">{post.author.handle}</p>
-                    </div>
-                    </div>
-                    <Button variant="ghost" size="icon">
-                        <MoreHorizontal className="w-5 h-5" />
-                    </Button>
+                  <Popover>
+                    <PopoverTrigger asChild>
+                      <div className="flex items-center space-x-3 cursor-pointer group">
+                        <Avatar>
+                          <AvatarImage src={post.author.avatar} data-ai-hint={post.author.type === 'business' ? 'company logo' : 'person'} />
+                          <AvatarFallback>{post.author.name.charAt(0)}</AvatarFallback>
+                        </Avatar>
+                        <div>
+                          <div className="flex items-center gap-1.5">
+                            <p className="font-semibold group-hover:underline">{post.author.name}</p>
+                            {post.author.rating && post.author.rating >= 4.8 && (
+                              <BadgeCheck className="w-4 h-4 text-primary" />
+                            )}
+                          </div>
+                          <p className="text-sm text-muted-foreground">{post.author.handle}</p>
+                        </div>
+                      </div>
+                    </PopoverTrigger>
+                    <PopoverContent className="w-80" side="bottom" align="start">
+                      <div className="flex gap-4">
+                        <Avatar className="h-16 w-16">
+                          <AvatarImage src={post.author.avatar} data-ai-hint={post.author.type === 'business' ? 'company logo' : 'person'} />
+                          <AvatarFallback>{post.author.name.charAt(0)}</AvatarFallback>
+                        </Avatar>
+                        <div className="space-y-1">
+                          <div className="flex items-center gap-1.5">
+                            <h4 className="font-semibold">{post.author.name}</h4>
+                             {post.author.rating && post.author.rating >= 4.8 && (
+                              <BadgeCheck className="w-4 h-4 text-primary" />
+                            )}
+                          </div>
+                          <p className="text-sm text-muted-foreground">{post.author.handle}</p>
+                           <Button size="sm">Follow</Button>
+                        </div>
+                      </div>
+                      <p className="text-sm my-4">{post.author.bio}</p>
+                      <div className="flex gap-4 text-sm border-t pt-3">
+                        <div><span className="font-bold">{post.author.following}</span> <span className="text-muted-foreground">Following</span></div>
+                        <div><span className="font-bold">{post.author.followers}</span> <span className="text-muted-foreground">Followers</span></div>
+                      </div>
+                    </PopoverContent>
+                  </Popover>
+
+                  <Button variant="ghost" size="icon">
+                    <MoreHorizontal className="w-5 h-5" />
+                  </Button>
                 </div>
               </CardHeader>
               <CardContent>

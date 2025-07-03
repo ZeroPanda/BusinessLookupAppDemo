@@ -3,7 +3,8 @@ import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle, CardDescription, CardFooter } from '@/components/ui/card';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
-import { Star, MapPin, Globe, Edit, Share2, ThumbsUp, MessageCircle } from 'lucide-react';
+import { Star, MapPin, Globe, Edit, Share2, ThumbsUp, MessageCircle, BadgeCheck } from 'lucide-react';
+import { Badge } from '@/components/ui/badge';
 
 export default function ProfilePage() {
   return (
@@ -21,7 +22,13 @@ export default function ProfilePage() {
             <div className="ml-6 flex-1">
                 <div className="flex justify-between items-start">
                     <div>
-                        <h1 className="text-3xl font-bold font-headline">Creative Solutions</h1>
+                        <div className="flex items-center gap-3">
+                          <h1 className="text-3xl font-bold font-headline">Creative Solutions</h1>
+                          <Badge variant="outline" className="border-primary text-primary font-semibold py-1 px-2">
+                              <BadgeCheck className="w-4 h-4 mr-1.5"/>
+                              Top-rated
+                          </Badge>
+                        </div>
                         <p className="text-muted-foreground">@creatives</p>
                     </div>
                     <div className="flex space-x-2">
@@ -35,7 +42,15 @@ export default function ProfilePage() {
           <p className="mt-4 max-w-2xl">
             We are a full-service digital agency specializing in web design, branding, and marketing for local businesses. Let's build something amazing together.
           </p>
-          <div className="mt-4 flex flex-wrap gap-x-6 gap-y-2 text-muted-foreground">
+           <div className="mt-4 flex items-center gap-6">
+              <div className="text-sm">
+                  <span className="font-bold text-card-foreground">2,154</span> <span className="text-muted-foreground">Following</span>
+              </div>
+              <div className="text-sm">
+                  <span className="font-bold text-card-foreground">18.7k</span> <span className="text-muted-foreground">Followers</span>
+              </div>
+          </div>
+          <div className="mt-4 flex flex-wrap gap-x-6 gap-y-2 text-muted-foreground border-t pt-4">
             <div className="flex items-center gap-2">
               <MapPin className="h-4 w-4" />
               <span>San Francisco, CA</span>
@@ -84,7 +99,10 @@ export default function ProfilePage() {
                         <div className="flex items-center space-x-3">
                             <Avatar><AvatarImage src="https://placehold.co/128x128.png" data-ai-hint="company logo"/><AvatarFallback>CS</AvatarFallback></Avatar>
                             <div>
-                                <p className="font-semibold">Creative Solutions</p>
+                                <div className="flex items-center gap-1.5">
+                                    <p className="font-semibold">Creative Solutions</p>
+                                    <BadgeCheck className="w-4 h-4 text-primary" />
+                                </div>
                                 <p className="text-sm text-muted-foreground">@creatives</p>
                             </div>
                         </div>
