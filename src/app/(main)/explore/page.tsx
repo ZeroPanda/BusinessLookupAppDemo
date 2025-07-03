@@ -24,7 +24,7 @@ const businesses = [
     reviews: 45,
     avatar: 'https://placehold.co/40x40.png',
     dataAiHint: 'gardening logo',
-    coords: [37.7749, -122.4194],
+    coords: [-122.4194, 37.7749], // [lon, lat]
   },
   {
     id: 2,
@@ -35,7 +35,7 @@ const businesses = [
     reviews: 72,
     avatar: 'https://placehold.co/40x40.png',
     dataAiHint: 'cleaning logo',
-    coords: [37.7850, -122.4294],
+    coords: [-122.4294, 37.7850], // [lon, lat]
   },
   {
     id: 3,
@@ -46,7 +46,7 @@ const businesses = [
     reviews: 112,
     avatar: 'https://placehold.co/40x40.png',
     dataAiHint: 'pet logo',
-    coords: [37.7649, -122.4394],
+    coords: [-122.4394, 37.7649], // [lon, lat]
   },
   {
     id: 4,
@@ -57,7 +57,7 @@ const businesses = [
     reviews: 30,
     avatar: 'https://placehold.co/40x40.png',
     dataAiHint: 'tech logo',
-    coords: [37.7949, -122.4094],
+    coords: [-122.4094, 37.7949], // [lon, lat]
   },
   {
     id: 5,
@@ -68,7 +68,7 @@ const businesses = [
     reviews: 88,
     avatar: 'https://placehold.co/40x40.png',
     dataAiHint: 'gym logo',
-    coords: [37.7549, -122.4494],
+    coords: [-122.4494, 37.7549], // [lon, lat]
   },
   {
     id: 6,
@@ -79,7 +79,7 @@ const businesses = [
     reviews: 65,
     avatar: 'https://placehold.co/40x40.png',
     dataAiHint: 'person portrait',
-    coords: [37.7849, -122.4000],
+    coords: [-122.4000, 37.7849], // [lon, lat]
   },
   {
     id: 7,
@@ -90,7 +90,7 @@ const businesses = [
     reviews: 250,
     avatar: 'https://placehold.co/40x40.png',
     dataAiHint: 'restaurant logo',
-    coords: [37.7900, -122.4340],
+    coords: [-122.4340, 37.7900], // [lon, lat]
   },
   {
     id: 8,
@@ -101,7 +101,7 @@ const businesses = [
     reviews: 180,
     avatar: 'https://placehold.co/40x40.png',
     dataAiHint: 'pizza logo',
-    coords: [37.7600, -122.4350],
+    coords: [-122.4350, 37.7600], // [lon, lat]
   },
 ];
 

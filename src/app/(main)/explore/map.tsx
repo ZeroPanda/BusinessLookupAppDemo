@@ -1,26 +1,13 @@
 'use client';
 
-import 'leaflet/dist/leaflet.css';
-import 'leaflet-defaulticon-compatibility/dist/leaflet-defaulticon-compatibility.css';
-import 'leaflet-defaulticon-compatibility';
-
-import { MapContainer, TileLayer, Marker, Popup, useMap } from 'react-leaflet';
-import type { LatLngExpression } from 'leaflet';
-import React, { useEffect } from 'react';
-
-// A component to handle map view changes imperatively
-function ChangeView({ center, zoom }: { center: LatLngExpression; zoom: number }) {
-  const map = useMap();
-  useEffect(() => {
-    map.flyTo(center, zoom);
-  }, [center, zoom, map]);
-  return null;
-}
+import 'maplibre-gl/dist/maplibre-gl.css';
+import * as React from 'react';
+import Map, { Marker, Popup, MapRef } from 'react-map-gl/maplibre';
 
 interface Business {
   id: number;
   name: string;
-  coords: LatLngExpression;
+  coords: [number, number]; // [longitude, latitude]
 }
 
 interface ExploreMapProps {
@@ -28,32 +15,83 @@ interface ExploreMapProps {
   selectedBusiness: Business | null;
 }
 
+const MAP_STYLE = {
+  version: 8,
+  sources: {
+    osm: {
+      type: 'raster',
+      tiles: ['https://a.tile.openstreetmap.org/{z}/{x}/{y}.png', 'https://b.tile.openstreetmap.org/{z}/{x}/{y}.png', 'https://c.tile.openstreetmap.org/{z}/{x}/{y}.png'],
+      tileSize: 256,
+      attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors',
+    },
+  },
+  layers: [
+    {
+      id: 'osm',
+      type: 'raster',
+      source: 'osm',
+      minzoom: 0,
+      maxzoom: 22
+    },
+  ],
+};
+
+
 export const ExploreMap = ({ businesses, selectedBusiness }: ExploreMapProps) => {
-  const defaultPosition: LatLngExpression = [37.7749, -122.4194];
-  const defaultZoom = 13;
+  const mapRef = React.useRef<MapRef>(null);
+  const [popupInfo, setPopupInfo] = React.useState<Business | null>(null);
+  
+  const initialViewState = {
+    longitude: -122.4194,
+    latitude: 37.7749,
+    zoom: 12,
+  };
+  
+  React.useEffect(() => {
+    if (selectedBusiness) {
+      mapRef.current?.flyTo({
+        center: selectedBusiness.coords,
+        zoom: 14,
+        duration: 1500,
+      });
+    }
+  }, [selectedBusiness]);
 
-  const positionToFlyTo = selectedBusiness?.coords || defaultPosition;
-  const zoomToFlyTo = selectedBusiness ? 15 : defaultZoom;
-
+  const markers = React.useMemo(() => businesses.map(biz => (
+    <Marker
+        key={`marker-${biz.id}`}
+        longitude={biz.coords[0]}
+        latitude={biz.coords[1]}
+        anchor="bottom"
+        onClick={e => {
+            e.originalEvent.stopPropagation();
+            setPopupInfo(biz);
+        }}
+    >
+        <div className="w-6 h-6 bg-primary rounded-full border-2 border-white shadow-md cursor-pointer" />
+    </Marker>
+  )), [businesses]);
 
   return (
-    <MapContainer
-      center={defaultPosition}
-      zoom={defaultZoom}
-      scrollWheelZoom={false}
-      className="h-full w-full z-0"
+    <Map
+        ref={mapRef}
+        initialViewState={initialViewState}
+        style={{ width: '100%', height: '100%' }}
+        mapStyle={MAP_STYLE as any}
+        attributionControl={true}
     >
-      <TileLayer
-        attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
-        url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
-      />
-      {businesses.map((biz) => (
-        <Marker key={biz.id} position={biz.coords}>
-          <Popup>{biz.name}</Popup>
-        </Marker>
-      ))}
+        {markers}
 
-      <ChangeView center={positionToFlyTo} zoom={zoomToFlyTo} />
-    </MapContainer>
+        {popupInfo && (
+            <Popup
+                anchor="top"
+                longitude={Number(popupInfo.coords[0])}
+                latitude={Number(popupInfo.coords[1])}
+                onClose={() => setPopupInfo(null)}
+            >
+                <div>{popupInfo.name}</div>
+            </Popup>
+        )}
+    </Map>
   );
 };
