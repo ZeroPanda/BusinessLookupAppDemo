@@ -1,7 +1,7 @@
 'use client';
 
-import Image from 'next/image';
-import React, { useState } from 'react';
+import React, { useState, useMemo } from 'react';
+import dynamic from 'next/dynamic';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Input } from '@/components/ui/input';
 import { Button } from '@/components/ui/button';
@@ -12,6 +12,7 @@ import { cn } from '@/lib/utils';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { Label } from '@/components/ui/label';
 import { Separator } from '@/components/ui/separator';
+import { Skeleton } from '@/components/ui/skeleton';
 
 const businesses = [
   {
@@ -23,6 +24,7 @@ const businesses = [
     reviews: 45,
     avatar: 'https://placehold.co/40x40.png',
     dataAiHint: 'gardening logo',
+    coords: [37.7749, -122.4194],
   },
   {
     id: 2,
@@ -33,6 +35,7 @@ const businesses = [
     reviews: 72,
     avatar: 'https://placehold.co/40x40.png',
     dataAiHint: 'cleaning logo',
+    coords: [37.7850, -122.4294],
   },
   {
     id: 3,
@@ -43,6 +46,7 @@ const businesses = [
     reviews: 112,
     avatar: 'https://placehold.co/40x40.png',
     dataAiHint: 'pet logo',
+    coords: [37.7649, -122.4394],
   },
   {
     id: 4,
@@ -53,6 +57,7 @@ const businesses = [
     reviews: 30,
     avatar: 'https://placehold.co/40x40.png',
     dataAiHint: 'tech logo',
+    coords: [37.7949, -122.4094],
   },
   {
     id: 5,
@@ -63,6 +68,7 @@ const businesses = [
     reviews: 88,
     avatar: 'https://placehold.co/40x40.png',
     dataAiHint: 'gym logo',
+    coords: [37.7549, -122.4494],
   },
   {
     id: 6,
@@ -73,6 +79,7 @@ const businesses = [
     reviews: 65,
     avatar: 'https://placehold.co/40x40.png',
     dataAiHint: 'person portrait',
+    coords: [37.7849, -122.4000],
   },
   {
     id: 7,
@@ -83,6 +90,7 @@ const businesses = [
     reviews: 250,
     avatar: 'https://placehold.co/40x40.png',
     dataAiHint: 'restaurant logo',
+    coords: [37.7900, -122.4340],
   },
   {
     id: 8,
@@ -93,6 +101,7 @@ const businesses = [
     reviews: 180,
     avatar: 'https://placehold.co/40x40.png',
     dataAiHint: 'pizza logo',
+    coords: [37.7600, -122.4350],
   },
 ];
 
@@ -104,6 +113,11 @@ const categories = [
     'Health & Wellness',
     'Professional Services',
 ]
+
+const Map = dynamic(() => import('./map').then((mod) => mod.ExploreMap), { 
+  ssr: false,
+  loading: () => <Skeleton className="h-full w-full" />
+});
 
 export default function ExplorePage() {
     const [selectedBusiness, setSelectedBusiness] = useState(businesses[0]);
@@ -205,15 +219,9 @@ export default function ExplorePage() {
       </div>
 
       <div className="lg:col-span-2 relative h-96 lg:h-full rounded-lg overflow-hidden border">
-        <Image
-          src="https://placehold.co/1200x900.png"
-          alt="Map of business locations"
-          fill
-          className="object-cover"
-          data-ai-hint="map city"
-        />
+        <Map businesses={filteredBusinesses} selectedBusiness={selectedBusiness} />
         {selectedBusiness && (
-          <div className="absolute bottom-6 left-1/2 w-[calc(100%_-_3rem)] max-w-sm -translate-x-1/2">
+          <div className="absolute bottom-6 left-1/2 w-[calc(100%_-_3rem)] max-w-sm -translate-x-1/2 z-10">
             <Card className="border-2 bg-background/80 shadow-2xl backdrop-blur-sm">
               <CardContent className="flex items-center gap-4 p-4">
                 <Avatar className="h-16 w-16 border-2 border-background">
