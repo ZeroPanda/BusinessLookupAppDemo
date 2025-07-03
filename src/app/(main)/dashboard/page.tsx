@@ -5,15 +5,11 @@ import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardFooter, CardHeader, CardTitle } from '@/components/ui/card';
 import { Textarea } from '@/components/ui/textarea';
-import { ThumbsUp, MessageCircle, Share2, MoreHorizontal, BadgeCheck, Star, TicketPercent, Calendar, ShoppingBag, FileText, MapPin, Sparkles, Loader2 } from 'lucide-react';
+import { ThumbsUp, MessageCircle, Share2, MoreHorizontal, BadgeCheck, Star, TicketPercent, Calendar, ShoppingBag, FileText, MapPin } from 'lucide-react';
 import React, { useState } from 'react';
 import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover';
 import { cn } from '@/lib/utils';
 import { Badge } from '@/components/ui/badge';
-import { Dialog, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle } from '@/components/ui/dialog';
-import { Label } from '@/components/ui/label';
-import { useToast } from '@/hooks/use-toast';
-import { generatePost } from '@/ai/flows/generatePostFlow';
 
 const initialPosts = [
   {
@@ -158,10 +154,6 @@ const renderPostText = (text: string) => {
 export default function DashboardPage() {
   const [posts, setPosts] = useState(initialPosts);
   const [newPostContent, setNewPostContent] = useState('');
-  const [isAiDialogOpen, setIsAiDialogOpen] = useState(false);
-  const [aiPrompt, setAiPrompt] = useState('');
-  const [isGenerating, setIsGenerating] = useState(false);
-  const { toast } = useToast();
 
   const handleCreatePost = () => {
     if (!newPostContent.trim()) return;
@@ -190,26 +182,6 @@ export default function DashboardPage() {
     setNewPostContent('');
   };
 
-  const handleGeneratePost = async () => {
-    if (!aiPrompt.trim()) return;
-    setIsGenerating(true);
-    try {
-        const generatedContent = await generatePost({ prompt: aiPrompt });
-        setNewPostContent(generatedContent.post);
-        setIsAiDialogOpen(false);
-        setAiPrompt('');
-    } catch (error) {
-        console.error("Error generating post:", error);
-        toast({
-            variant: "destructive",
-            title: "AI Post Generation Failed",
-            description: "There was an error generating the post. Please try again.",
-        });
-    } finally {
-        setIsGenerating(false);
-    }
-};
-
 
   return (
     <>
@@ -233,10 +205,6 @@ export default function DashboardPage() {
             </div>
           </CardHeader>
           <CardFooter className="flex justify-end gap-2">
-            <Button variant="outline" onClick={() => setIsAiDialogOpen(true)}>
-              <Sparkles className="mr-2 h-4 w-4" />
-              Generate with AI
-            </Button>
             <Button onClick={handleCreatePost}>Create Post</Button>
           </CardFooter>
         </Card>
@@ -431,33 +399,6 @@ export default function DashboardPage() {
          </Card>
       </div>
     </div>
-     <Dialog open={isAiDialogOpen} onOpenChange={setIsAiDialogOpen}>
-      <DialogContent className="sm:max-w-md">
-        <DialogHeader>
-          <DialogTitle>Generate Post with AI</DialogTitle>
-          <DialogDescription>
-            Describe your post idea, and our AI will write it for you. Try "a special on croissants this weekend" or "our new dog walking service".
-          </DialogDescription>
-        </DialogHeader>
-        <div className="space-y-2">
-          <Label htmlFor="ai-prompt" className="sr-only">Your Idea</Label>
-          <Textarea 
-            id="ai-prompt"
-            placeholder="e.g., A post about our new organic dog treats"
-            value={aiPrompt}
-            onChange={(e) => setAiPrompt(e.target.value)}
-            rows={3}
-          />
-        </div>
-        <DialogFooter>
-          <Button variant="ghost" onClick={() => setIsAiDialogOpen(false)}>Cancel</Button>
-          <Button onClick={handleGeneratePost} disabled={isGenerating}>
-            {isGenerating && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
-            Generate
-          </Button>
-        </DialogFooter>
-      </DialogContent>
-    </Dialog>
     </>
   );
 }
