@@ -7,7 +7,7 @@ import { Input } from '@/components/ui/input';
 import { Button } from '@/components/ui/button';
 import { Search, Star } from 'lucide-react';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
-import { ScrollArea } from '@/components/ui/scroll-area';
+import { ScrollArea, ScrollBar } from '@/components/ui/scroll-area';
 import { cn } from '@/lib/utils';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { Label } from '@/components/ui/label';
@@ -118,101 +118,103 @@ export default function ExplorePage() {
         return categoryMatch && searchTermMatch && ratingMatch;
     });
 
+    const getInitials = (name: string) => name.split(' ').map(n => n[0]).join('');
+
   return (
-    <div className="grid h-[calc(100vh_-_8rem)] grid-cols-1 gap-6 md:grid-cols-3 lg:grid-cols-4">
-      <div className="flex flex-col md:col-span-1 lg:col-span-1">
-        <Card className="flex flex-1 flex-col overflow-hidden">
+    <div className="grid grid-cols-1 lg:grid-cols-3 gap-8 lg:h-[calc(100vh_-_8rem)]">
+      <div className="lg:col-span-1 lg:flex lg:flex-col">
+        <Card className="flex-1 flex flex-col">
           <CardHeader>
-            <CardTitle>Explore</CardTitle>
+            <CardTitle>Explore Businesses</CardTitle>
              <div className="relative pt-2">
               <Search className="absolute left-2.5 top-4 h-4 w-4 text-muted-foreground" />
               <Input 
-                placeholder="Search businesses..." 
+                placeholder="Search by name or keyword..." 
                 className="pl-8" 
                 value={searchTerm}
                 onChange={e => setSearchTerm(e.target.value)}
               />
             </div>
           </CardHeader>
-          <CardContent className="flex flex-1 flex-col p-0">
-             <div className="p-6 pt-0 space-y-4">
-                <div>
-                    <h3 className="mb-3 text-sm font-medium text-muted-foreground">Categories</h3>
-                    <div className="flex flex-wrap gap-2">
+          <div className="p-6 pt-0">
+             <div>
+                <Label className="text-sm font-medium text-muted-foreground">Category</Label>
+                <ScrollArea className="w-full whitespace-nowrap pt-2">
+                    <div className="flex gap-2 pb-2">
                         {categories.map(category => (
                             <Button 
                                 key={category} 
                                 variant={activeCategory === category ? "default" : "outline"}
                                 size="sm"
-                                className="rounded-full"
+                                className="rounded-full shrink-0"
                                 onClick={() => setActiveCategory(category)}
                             >
                                 {category}
                             </Button>
                         ))}
                     </div>
-                </div>
-                <div>
-                    <Label htmlFor="rating-filter" className="text-sm font-medium text-muted-foreground">Minimum Rating</Label>
-                     <Select onValueChange={(value) => setRatingFilter(value === '0' ? null : Number(value))}>
-                        <SelectTrigger className="w-full mt-1">
-                            <SelectValue placeholder="Any Rating" />
-                        </SelectTrigger>
-                        <SelectContent>
-                            <SelectItem value="0">Any Rating</SelectItem>
-                            <SelectItem value="4.5">4.5 Stars & Up</SelectItem>
-                            <SelectItem value="4">4 Stars & Up</SelectItem>
-                            <SelectItem value="3">3 Stars & Up</SelectItem>
-                        </SelectContent>
-                    </Select>
-                </div>
-             </div>
-             <Separator />
-             <ScrollArea className="flex-1 min-h-0 px-6 pt-6">
-                <div className="space-y-4 pb-6">
-                {filteredBusinesses.length > 0 ? filteredBusinesses.map((biz) => (
-                  <div 
-                    key={biz.id} 
-                    className={cn(
-                        "flex cursor-pointer items-start gap-4 rounded-lg border p-4 transition-colors",
-                        selectedBusiness?.id === biz.id ? 'bg-secondary' : 'hover:bg-secondary/60'
-                    )}
-                    onClick={() => setSelectedBusiness(biz)}
-                  >
-                    <Avatar className="h-12 w-12 border">
-                      <AvatarImage src={biz.avatar} data-ai-hint={biz.dataAiHint} />
-                      <AvatarFallback>{biz.name.charAt(0)}</AvatarFallback>
-                    </Avatar>
-                    <div className="flex-1">
-                      <p className="font-semibold">{biz.name}</p>
-                      <p className="text-sm text-muted-foreground">{biz.description}</p>
-                      <div className="mt-2 flex items-center gap-2 text-sm text-muted-foreground">
-                        <Star className="h-4 w-4 fill-yellow-500 text-yellow-500" />
-                        <span>{biz.rating} ({biz.reviews} reviews)</span>
-                      </div>
+                    <ScrollBar orientation="horizontal" />
+                </ScrollArea>
+            </div>
+            <div className="pt-4">
+                <Label htmlFor="rating-filter" className="text-sm font-medium text-muted-foreground">Minimum Rating</Label>
+                 <Select onValueChange={(value) => setRatingFilter(value === '0' ? null : Number(value))}>
+                    <SelectTrigger id="rating-filter" className="w-full mt-1">
+                        <SelectValue placeholder="Any Rating" />
+                    </SelectTrigger>
+                    <SelectContent>
+                        <SelectItem value="0">Any Rating</SelectItem>
+                        <SelectItem value="4.5">4.5 Stars & Up</SelectItem>
+                        <SelectItem value="4">4 Stars & Up</SelectItem>
+                        <SelectItem value="3">3 Stars & Up</SelectItem>
+                    </SelectContent>
+                </Select>
+            </div>
+          </div>
+          <Separator />
+          <ScrollArea className="flex-1 min-h-0">
+              <CardContent className="pt-6 space-y-4">
+              {filteredBusinesses.length > 0 ? filteredBusinesses.map((biz) => (
+                <div 
+                  key={biz.id} 
+                  className={cn(
+                      "flex cursor-pointer items-start gap-4 rounded-lg border p-3 transition-colors text-left",
+                      selectedBusiness?.id === biz.id ? 'bg-secondary ring-2 ring-primary' : 'hover:bg-secondary/60'
+                  )}
+                  onClick={() => setSelectedBusiness(biz)}
+                >
+                  <Avatar className="h-12 w-12 border">
+                    <AvatarImage src={biz.avatar} data-ai-hint={biz.dataAiHint} />
+                    <AvatarFallback>{getInitials(biz.name)}</AvatarFallback>
+                  </Avatar>
+                  <div className="flex-1">
+                    <p className="font-semibold">{biz.name}</p>
+                    <p className="text-sm text-muted-foreground">{biz.description}</p>
+                    <div className="mt-2 flex items-center gap-2 text-sm text-muted-foreground">
+                      <Star className="h-4 w-4 fill-yellow-500 text-yellow-500" />
+                      <span>{biz.rating.toFixed(1)} ({biz.reviews} reviews)</span>
                     </div>
                   </div>
-                )) : (
-                  <p className="text-center text-sm text-muted-foreground py-10">No businesses found.</p>
-                )}
-              </div>
-            </ScrollArea>
-          </CardContent>
+                </div>
+              )) : (
+                <p className="text-center text-sm text-muted-foreground py-10">No businesses found. Try adjusting your filters.</p>
+              )}
+            </CardContent>
+          </ScrollArea>
         </Card>
       </div>
-      <div className="relative h-full md:col-span-2 lg:col-span-3">
-        <Card className="relative h-full overflow-hidden">
-          <Image
-            src="https://placehold.co/1200x900.png"
-            alt="Map of business locations"
-            fill
-            className="object-cover"
-            data-ai-hint="map city"
-          />
-        </Card>
+
+      <div className="lg:col-span-2 relative h-96 lg:h-full rounded-lg overflow-hidden border">
+        <Image
+          src="https://placehold.co/1200x900.png"
+          alt="Map of business locations"
+          fill
+          className="object-cover"
+          data-ai-hint="map city"
+        />
         {selectedBusiness && (
-          <div className="absolute bottom-6 left-1/2 w-full max-w-md -translate-x-1/2 px-6">
-            <Card className="border-0 bg-background/80 shadow-2xl backdrop-blur-sm">
+          <div className="absolute bottom-6 left-1/2 w-[calc(100%_-_3rem)] max-w-sm -translate-x-1/2">
+            <Card className="border-2 bg-background/80 shadow-2xl backdrop-blur-sm">
               <CardContent className="flex items-center gap-4 p-4">
                 <Avatar className="h-16 w-16 border-2 border-background">
                   <AvatarImage
@@ -220,7 +222,7 @@ export default function ExplorePage() {
                     data-ai-hint={selectedBusiness.dataAiHint}
                   />
                   <AvatarFallback>
-                    {selectedBusiness.name.charAt(0)}
+                    {getInitials(selectedBusiness.name)}
                   </AvatarFallback>
                 </Avatar>
                 <div className="flex-1">
@@ -231,12 +233,12 @@ export default function ExplorePage() {
                   <div className="mt-1 flex items-center gap-2 text-sm text-muted-foreground">
                     <Star className="h-4 w-4 fill-yellow-500 text-yellow-500" />
                     <span>
-                      {selectedBusiness.rating} ({selectedBusiness.reviews}{" "}
+                      {selectedBusiness.rating.toFixed(1)} ({selectedBusiness.reviews}{" "}
                       reviews)
                     </span>
                   </div>
                 </div>
-                <Button>View Profile</Button>
+                <Button>View</Button>
               </CardContent>
             </Card>
           </div>
