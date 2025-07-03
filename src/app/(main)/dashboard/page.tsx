@@ -5,13 +5,16 @@ import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardFooter, CardHeader, CardTitle } from '@/components/ui/card';
 import { Textarea } from '@/components/ui/textarea';
-import { ThumbsUp, MessageCircle, Share2, MoreHorizontal, BadgeCheck } from 'lucide-react';
+import { ThumbsUp, MessageCircle, Share2, MoreHorizontal, BadgeCheck, Star, TicketPercent, Calendar, ShoppingBag, FileText, MapPin } from 'lucide-react';
 import React, { useState } from 'react';
 import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover';
+import { cn } from '@/lib/utils';
+import { Badge } from '@/components/ui/badge';
 
 const initialPosts = [
   {
     id: 1,
+    type: 'offer',
     author: {
       name: 'Creative Solutions',
       handle: '@creatives',
@@ -22,14 +25,84 @@ const initialPosts = [
       followers: 18700,
       following: 2154,
     },
-    content: 'Just launched our new website design package! Perfect for small businesses looking to make a big impact online. DM for a free consultation! #webdesign #localbusiness',
+    title: '50% Off Web Design',
+    content: 'Limited time offer! Get 50% off our standard web design package. Perfect for new businesses. DM for a free consultation!',
+    validUntil: 'Ends Dec 31st',
     image: 'https://placehold.co/600x400.png',
     imageHint: 'website design',
-    likes: 24,
-    comments: 5,
+    likes: 42,
+    comments: 11,
   },
   {
     id: 2,
+    type: 'rating',
+    author: {
+        name: 'David',
+        handle: '@david',
+        avatar: 'https://placehold.co/40x40.png',
+        type: 'individual',
+        rating: null,
+        bio: 'Exploring the neighborhood and connecting with local businesses.',
+        followers: 12,
+        following: 88,
+    },
+    business: {
+      name: 'The Sweet Spot Bakery',
+      handle: '@sweetspot'
+    },
+    rating: 5,
+    content: 'Just tried the almond croissant at The Sweet Spot Bakery, and it was heavenly! 🥐 The staff is super friendly too. Highly recommend stopping by!',
+    image: 'https://placehold.co/600x400.png',
+    imageHint: 'bakery croissants',
+    likes: 18,
+    comments: 4,
+  },
+    {
+    id: 3,
+    type: 'event',
+    author: {
+      name: 'Green Leaf Gardening',
+      handle: '@greenleaf',
+      avatar: 'https://placehold.co/40x40.png',
+      type: 'business',
+      rating: 4.8,
+      bio: 'Lawn care, landscaping, and all your gardening needs.',
+      followers: 850,
+      following: 120,
+    },
+    eventName: 'Free Gardening Workshop',
+    date: 'Saturday, Aug 10th @ 11:00 AM',
+    location: 'Our Store',
+    content: 'Join us for a free workshop on container gardening. Learn how to grow your own herbs and vegetables on your balcony or patio!',
+    image: 'https://placehold.co/600x400.png',
+    imageHint: 'gardening workshop',
+    likes: 35,
+    comments: 9,
+  },
+  {
+    id: 4,
+    type: 'product',
+    author: {
+      name: 'Pawsitive Pups',
+      handle: '@pawsitive',
+      avatar: 'https://placehold.co/40x40.png',
+      type: 'business',
+      rating: 5.0,
+      bio: 'Dog walking & pet sitting services. We love your pets!',
+      followers: 1200,
+      following: 80,
+    },
+    productName: 'Organic Dog Treats',
+    price: '$12.99',
+    content: 'New in stock! Our homemade organic peanut butter dog treats. Your furry friends will love them!',
+    image: 'https://placehold.co/600x400.png',
+    imageHint: 'dog treats',
+    likes: 62,
+    comments: 21,
+  },
+   {
+    id: 5,
+    type: 'status',
     author: {
       name: 'John The Plumber',
       handle: '@johnplumbs',
@@ -40,31 +113,22 @@ const initialPosts = [
       followers: 231,
       following: 45,
     },
-    content: 'Leaky faucet? Clogged drain? I\'m available for plumbing emergencies all week. Fast, reliable, and affordable service. Call me at 555-1234.',
+    content: 'Just finished a big repiping job in the downtown area. If you\'re experiencing low water pressure in an older home, give me a call! 555-1234.',
     image: null,
     imageHint: null,
     likes: 12,
     comments: 3,
   },
-    {
-    id: 3,
-    author: {
-      name: 'The Sweet Spot Bakery',
-      handle: '@sweetspot',
-      avatar: 'https://placehold.co/40x40.png',
-      type: 'business',
-      rating: 5.0,
-      bio: 'Freshly baked goods made with love. Come and get them while they are hot! 🥐',
-      followers: 3456,
-      following: 121,
-    },
-    content: 'Fresh batch of our famous croissants are out of the oven! Come and get them while they are hot. 🥐 We are open until 6 PM today.',
-    image: 'https://placehold.co/600x400.png',
-    imageHint: 'bakery croissants',
-    likes: 58,
-    comments: 17,
-  },
 ];
+
+const postTypeConfig: any = {
+  offer: { icon: TicketPercent, color: 'border-l-chart-1', title: 'Special Offer' },
+  rating: { icon: Star, color: 'border-l-chart-4', title: 'New Rating' },
+  event: { icon: Calendar, color: 'border-l-chart-3', title: 'Upcoming Event' },
+  product: { icon: ShoppingBag, color: 'border-l-chart-2', title: 'New Product' },
+  status: { icon: FileText, color: 'border-l-transparent', title: 'Status Update' },
+};
+
 
 export default function DashboardPage() {
   const [posts, setPosts] = useState(initialPosts);
@@ -73,8 +137,9 @@ export default function DashboardPage() {
   const handleCreatePost = () => {
     if (!newPostContent.trim()) return;
 
-    const newPost = {
+    const newPost: any = {
       id: posts.length + 1,
+      type: 'status',
       author: {
         name: 'David',
         handle: '@david',
@@ -123,8 +188,11 @@ export default function DashboardPage() {
         </Card>
 
         <div className="space-y-6">
-          {posts.map((post) => (
-            <Card key={post.id}>
+          {posts.map((post: any) => {
+            const config = postTypeConfig[post.type];
+            const PostIcon = config.icon;
+            return (
+            <Card key={post.id} className={cn('border-l-4', config.color)}>
               <CardHeader>
                 <div className="flex items-center justify-between">
                   <Popover>
@@ -174,8 +242,48 @@ export default function DashboardPage() {
                     <MoreHorizontal className="w-5 h-5" />
                   </Button>
                 </div>
+                {post.type !== 'status' && (
+                  <div className="flex items-center gap-2 text-sm text-muted-foreground mt-4 font-medium">
+                    <PostIcon className="w-4 h-4" />
+                    <span>{config.title}</span>
+                  </div>
+                )}
               </CardHeader>
               <CardContent>
+                {post.type === 'offer' && (
+                  <div className="p-4 rounded-lg bg-secondary mb-3">
+                      <h3 className="font-bold text-lg text-primary">{post.title}</h3>
+                      <p className="text-sm text-muted-foreground font-medium">Valid until: {post.validUntil}</p>
+                  </div>
+                )}
+                 {post.type === 'rating' && (
+                  <div className="mb-3 flex items-center gap-2">
+                    <p className="font-semibold">Rated <span className="text-primary">{post.business.name}</span>:</p>
+                    <div className="flex items-center">
+                        {Array(post.rating).fill(0).map((_, i) => (
+                            <Star key={i} className="h-5 w-5 text-yellow-400 fill-yellow-400" />
+                        ))}
+                    </div>
+                  </div>
+                )}
+                {post.type === 'event' && (
+                  <div className="p-4 rounded-lg bg-secondary mb-3">
+                      <h3 className="font-bold text-lg">{post.eventName}</h3>
+                      <div className="text-sm text-muted-foreground mt-2 space-y-1">
+                        <p className="flex items-center gap-2"><Calendar className="w-4 h-4"/> {post.date}</p>
+                        <p className="flex items-center gap-2"><MapPin className="w-4 h-4"/> {post.location}</p>
+                      </div>
+                  </div>
+                )}
+                 {post.type === 'product' && (
+                  <div className="p-4 rounded-lg bg-secondary mb-3">
+                      <div className="flex justify-between items-center">
+                        <h3 className="font-bold text-lg">{post.productName}</h3>
+                        <Badge variant="outline" className="text-base">{post.price}</Badge>
+                      </div>
+                  </div>
+                )}
+
                 <p className="whitespace-pre-wrap">{post.content}</p>
                 {post.image && (
                   <div className="mt-4 rounded-lg overflow-hidden border">
@@ -204,7 +312,7 @@ export default function DashboardPage() {
                 </div>
               </CardFooter>
             </Card>
-          ))}
+          )})}
         </div>
       </div>
       <div className="lg:col-span-1 space-y-6 sticky top-20">
