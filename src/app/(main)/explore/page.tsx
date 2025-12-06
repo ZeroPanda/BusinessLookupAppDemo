@@ -2,6 +2,7 @@
 
 import React, { useState, useMemo } from 'react';
 import dynamic from 'next/dynamic';
+import type { Business } from './map';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Input } from '@/components/ui/input';
 import { Button } from '@/components/ui/button';
@@ -14,7 +15,7 @@ import { Label } from '@/components/ui/label';
 import { Separator } from '@/components/ui/separator';
 import { Skeleton } from '@/components/ui/skeleton';
 
-const businesses = [
+const businesses: Business[] = [
   {
     id: 1,
     name: 'Green Leaf Gardening',
@@ -120,7 +121,7 @@ const Map = dynamic(() => import('./map').then((mod) => mod.ExploreMap), {
 });
 
 export default function ExplorePage() {
-    const [selectedBusiness, setSelectedBusiness] = useState<any>(businesses[0]);
+    const [selectedBusiness, setSelectedBusiness] = useState<Business | null>(businesses[0]);
     const [activeCategory, setActiveCategory] = useState('All');
     const [searchTerm, setSearchTerm] = useState('');
     const [ratingFilter, setRatingFilter] = useState<number | null>(null);

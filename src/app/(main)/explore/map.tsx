@@ -4,9 +4,15 @@ import 'maplibre-gl/dist/maplibre-gl.css';
 import * as React from 'react';
 import Map, { Marker, Popup, MapRef } from 'react-map-gl/maplibre';
 
-interface Business {
+export interface Business {
   id: number;
   name: string;
+  category: string;
+  description: string;
+  rating: number;
+  reviews: number;
+  avatar: string;
+  dataAiHint: string;
   coords: [number, number]; // [longitude, latitude]
 }
 
